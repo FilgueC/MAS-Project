@@ -62,7 +62,7 @@ export function Contact() {
               transition={{ duration: 0.6 }}
             >
               <h2 className="text-3xl mb-6 text-gray-900">
-                Informações de Contacto
+                Informações de contacto
               </h2>
               <p className="text-lg text-gray-600 mb-8">
                 Tem alguma questão? Estamos disponíveis para ajudar através dos seguintes canais:
@@ -75,7 +75,6 @@ export function Contact() {
                   </div>
                   <div>
                     <h3 className="text-lg mb-1 text-gray-900">Email</h3>
-                    <p className="text-gray-600">info@loop.pt</p>
                     <p className="text-gray-600">suporte@loop.pt</p>
                   </div>
                 </div>
@@ -114,15 +113,7 @@ export function Contact() {
                   </div>
                 </div>
               </div>
-
-              {/* Map placeholder */}
-              <div className="mt-8 h-64 bg-gray-200 rounded-xl overflow-hidden">
-                <div className="w-full h-full flex items-center justify-center text-gray-500">
-                  <MapPin className="w-12 h-12" />
-                </div>
-              </div>
             </motion.div>
-
             {/* Contact Form */}
             <motion.div
               initial={{ opacity: 0, x: 20 }}
@@ -137,7 +128,7 @@ export function Contact() {
               <form onSubmit={handleSubmit} className="space-y-6">
                 <div>
                   <label htmlFor="name" className="block text-sm mb-2 text-gray-700">
-                    Nome Completo *
+                    Nome Completo*
                   </label>
                   <input
                     type="text"
@@ -153,7 +144,7 @@ export function Contact() {
 
                 <div>
                   <label htmlFor="email" className="block text-sm mb-2 text-gray-700">
-                    Email *
+                    Email*
                   </label>
                   <input
                     type="email"
@@ -169,7 +160,7 @@ export function Contact() {
 
                 <div>
                   <label htmlFor="subject" className="block text-sm mb-2 text-gray-700">
-                    Assunto *
+                    Assunto*
                   </label>
                   <select
                     id="subject"
@@ -190,7 +181,7 @@ export function Contact() {
 
                 <div>
                   <label htmlFor="message" className="block text-sm mb-2 text-gray-700">
-                    Mensagem *
+                    Mensagem*
                   </label>
                   <textarea
                     id="message"
@@ -213,7 +204,7 @@ export function Contact() {
               </form>
 
               <p className="mt-4 text-sm text-gray-500 text-center">
-                * Campos obrigatórios. Respondemos normalmente em 24 horas.
+                * Campos obrigatórios.
               </p>
             </motion.div>
           </div>
