@@ -94,26 +94,7 @@ export function Login() {
                 <p className="text-sm text-emerald-700">
                   Password: <strong>loop2024</strong>
                 </p>
-                <hr className="my-2 border-emerald-200" />
-                <p className="text-sm text-emerald-800 mb-1">
-                  <strong>Conta de administrador:</strong>
-                </p>
-                <p className="text-sm text-emerald-700">
-                  Email: <strong>admin@loop.pt</strong>
-                </p>
-                <p className="text-sm text-emerald-700">
-                  Password: <strong>admin2024</strong>
-                </p>
-                <hr className="my-2 border-emerald-200" />
-                <p className="text-sm text-emerald-800 mb-1">
-                  <strong>Conta de parceiro:</strong>
-                </p>
-                <p className="text-sm text-emerald-700">
-                  Email: <strong>partner@techrenew.pt</strong>
-                </p>
-                <p className="text-sm text-emerald-700">
-                  Password: <strong>partner2024</strong>
-                </p>
+                
               </div>
             )}
 

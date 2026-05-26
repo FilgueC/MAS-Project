@@ -422,11 +422,8 @@ export function Products() {
 
                   {/* Rating & Stock */}
                   <div className="flex items-center gap-2 mb-4">
-                    <div className="flex items-center">
-                      <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
-                      <span className="ml-1 text-sm text-gray-600">{product.rating}</span>
-                    </div>
-                    <span className="text-sm text-gray-400">•</span>
+                    
+                    
                     <span className="text-sm text-gray-600">Garantia 24 meses</span>
                     <span className="text-sm text-gray-400">•</span>
                     <span className={`text-sm ${product.stock > 0 ? "text-green-600" : "text-red-600"}`}>

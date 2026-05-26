@@ -70,27 +70,7 @@ const MOCK_USERS = [
     avatar: "",
     isAdmin: false,
     isPartner: false,
-  },
-  {
-    id: "admin",
-    name: "Administrador LOOP",
-    email: "admin@loop.pt",
-    password: "admin2024",
-    phone: "+351 900 000 000",
-    avatar: "",
-    isAdmin: true,
-    isPartner: false,
-  },
-  {
-    id: "partner",
-    name: "TechRenew Lisboa",
-    email: "partner@techrenew.pt",
-    password: "partner2024",
-    phone: "+351 210 123 456",
-    avatar: "",
-    isAdmin: false,
-    isPartner: true,
-  },
+  }
 ];
 
 const MOCK_ORDERS: Order[] = [

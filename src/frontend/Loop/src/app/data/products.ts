@@ -2,7 +2,6 @@ export interface ProductReview {
   id: string;
   userId: string;
   userName: string;
-  rating: number;
   comment: string;
   date: string;
   verified: boolean;
@@ -17,7 +16,6 @@ export interface Product {
   image: string;
   images?: string[]; // Multiple product images
   condition: "Como Novo" | "Excelente" | "Muito Bom";
-  rating: number;
   storage?: string;
   color?: string;
   description?: string;
@@ -48,7 +46,6 @@ export const products: Product[] = [
     price: 659,
     image: "https://images.unsplash.com/photo-1643858527913-16e06986db32?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxpUGhvbmUlMjAxMyUyMFBybyUyMHNtYXJ0cGhvbmV8ZW58MXx8fHwxNzczMjU5MTgzfDA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral",
     condition: "Como Novo",
-    rating: 4.8,
     storage: "256GB",
     color: "Grafite",
     stock: 8,
@@ -65,26 +62,6 @@ export const products: Product[] = [
       energySaved: 2,
       wastePrevented: 0.5,
     },
-    reviews: [
-      {
-        id: "r1",
-        userId: "1",
-        userName: "Maria Santos",
-        rating: 5,
-        comment: "Excelente estado, parece novo! Muito satisfeita com a compra.",
-        date: "2024-03-15",
-        verified: true,
-      },
-      {
-        id: "r2",
-        userId: "2",
-        userName: "João Ferreira",
-        rating: 4,
-        comment: "Produto em bom estado, bateria com boa capacidade. Recomendo.",
-        date: "2024-03-10",
-        verified: true,
-      },
-    ],
   },
   {
     id: 2,
@@ -94,7 +71,6 @@ export const products: Product[] = [
     price: 439,
     image: "https://images.unsplash.com/photo-1605637064671-c03a5fae76cd?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxpUGhvbmUlMjAxMiUyMHNtYXJ0cGhvbmUlMjBibGFja3xlbnwxfHx8fDE3NzMyNTkxODN8MA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral",
     condition: "Excelente",
-    rating: 4.7,
     storage: "128GB",
     color: "Preto",
     stock: 15,
@@ -120,7 +96,6 @@ export const products: Product[] = [
     price: 549,
     image: "https://images.unsplash.com/photo-1681651585822-b2edab241341?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxTYW1zdW5nJTIwR2FsYXh5JTIwUzIzJTIwcGhvbmV8ZW58MXx8fHwxNzczMjU5MTg0fDA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral",
     condition: "Excelente",
-    rating: 4.6,
     storage: "256GB",
     color: "Preto Fantasma",
     stock: 0,
@@ -146,7 +121,6 @@ export const products: Product[] = [
     price: 499,
     image: "https://images.unsplash.com/photo-1636633484288-ba18d16271a0?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxHb29nbGUlMjBQaXhlbCUyMHNtYXJ0cGhvbmV8ZW58MXx8fHwxNzczMjQ0NTEzfDA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral",
     condition: "Como Novo",
-    rating: 4.7,
     storage: "128GB",
     color: "Obsidiana",
     stock: 5,
@@ -174,7 +148,6 @@ export const products: Product[] = [
     price: 1399,
     image: "https://images.unsplash.com/photo-1551533390-b80b6ffa7816?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxNYWNCb29rJTIwUHJvJTIwbGFwdG9wfGVufDF8fHx8MTc3MzI1OTE4NHww&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral",
     condition: "Excelente",
-    rating: 4.9,
     storage: "512GB SSD",
     color: "Cinzento Sideral",
     stock: 3,
@@ -200,7 +173,6 @@ export const products: Product[] = [
     price: 1099,
     image: "https://images.unsplash.com/photo-1622286346003-c5c7e63b1088?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxEZWxsJTIwWFBTJTIwbGFwdG9wJTIwY29tcHV0ZXJ8ZW58MXx8fHwxNzczMjU5MTg1fDA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral",
     condition: "Como Novo",
-    rating: 4.9,
     storage: "1TB SSD",
     color: "Platina",
     stock: 12,
@@ -226,7 +198,6 @@ export const products: Product[] = [
     price: 599,
     image: "https://images.unsplash.com/photo-1743865320670-8f4722dd3542?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxIUCUyMGxhcHRvcCUyMHByb2Zlc3Npb25hbHxlbnwxfHx8fDE3NzMyNTkxODV8MA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral",
     condition: "Excelente",
-    rating: 4.5,
     storage: "512GB SSD",
     color: "Prata Natural",
     stock: 7,
@@ -252,7 +223,6 @@ export const products: Product[] = [
     price: 849,
     image: "https://images.unsplash.com/photo-1763162410742-1d0097cea556?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxMZW5vdm8lMjBUaGlua1BhZCUyMGxhcHRvcHxlbnwxfHx8fDE3NzMyNTkxODV8MA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral",
     condition: "Excelente",
-    rating: 4.6,
     storage: "256GB SSD",
     color: "Preto",
     stock: 6,
@@ -280,7 +250,6 @@ export const products: Product[] = [
     price: 419,
     image: "https://images.unsplash.com/photo-1691580438206-08456840b6de?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxpUGFkJTIwQWlyJTIwdGFibGV0fGVufDF8fHx8MTc3MzI1OTE4Nnww&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral",
     condition: "Como Novo",
-    rating: 4.7,
     storage: "64GB",
     color: "Azul",
     stock: 10,
@@ -306,7 +275,6 @@ export const products: Product[] = [
     price: 669,
     image: "https://images.unsplash.com/photo-1628866971124-5d506bf12915?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxpUGFkJTIwUHJvJTIwdGFibGV0fGVufDF8fHx8MTc3MzI1OTE4Nnww&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral",
     condition: "Excelente",
-    rating: 4.8,
     storage: "128GB",
     color: "Cinzento Sideral",
     stock: 4,
@@ -332,7 +300,6 @@ export const products: Product[] = [
     price: 399,
     image: "https://images.unsplash.com/photo-1722150635400-781fa4b5f40e?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxTYW1zdW5nJTIwR2FsYXh5JTIwVGFiJTIwdGFibGV0fGVufDF8fHx8MTc3MzI1OTE4N3ww&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral",
     condition: "Como Novo",
-    rating: 4.8,
     storage: "128GB",
     color: "Grafite",
     stock: 0,
@@ -358,7 +325,6 @@ export const products: Product[] = [
     price: 799,
     image: "https://images.unsplash.com/photo-1595245150898-339b88a9d477?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxNaWNyb3NvZnQlMjBTdXJmYWNlJTIwdGFibGV0fGVufDF8fHx8MTc3MzI1OTE4N3ww&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral",
     condition: "Excelente",
-    rating: 4.7,
     storage: "256GB",
     color: "Platina",
     stock: 9,
@@ -386,7 +352,6 @@ export const products: Product[] = [
     price: 259,
     image: "https://images.unsplash.com/photo-1583305727488-61f82c7eae4b?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxTb255JTIwV0gxMDAwWE01JTIwaGVhZHBob25lc3xlbnwxfHx8fDE3NzMyNTkxODh8MA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral",
     condition: "Excelente",
-    rating: 4.8,
     color: "Preto",
     stock: 14,
     timeline: {
@@ -411,7 +376,6 @@ export const products: Product[] = [
     price: 179,
     image: "https://images.unsplash.com/photo-1639789974886-7873405240ab?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxBaXJQb2RzJTIwUHJvJTIwZWFyYnVkc3xlbnwxfHx8fDE3NzMyMzMwMDF8MA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral",
     condition: "Excelente",
-    rating: 4.7,
     color: "Branco",
     stock: 20,
     timeline: {
@@ -436,7 +400,6 @@ export const products: Product[] = [
     price: 229,
     image: "https://images.unsplash.com/photo-1657223143975-d29d7959a70f?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxCb3NlJTIwaGVhZHBob25lcyUyMHdpcmVsZXNzfGVufDF8fHx8MTc3MzI1OTE4OHww&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral",
     condition: "Como Novo",
-    rating: 4.6,
     color: "Preto Triplo",
     stock: 8,
     timeline: {
@@ -459,9 +422,8 @@ export const products: Product[] = [
     category: "Auscultadores",
     brand: "Apple",
     price: 379,
-    image: "https://images.unsplash.com/photo-1639789974886-7873405240ab?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxBaXJQb2RzJTIwUHJvJTIwZWFyYnVkc3xlbnwxfHx8fDE3NzMyMzMwMDF8MA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral",
+    image: "https://images.unsplash.com/photo-1639789974886-7873405240ab?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHhBaXJQb2RzJTIwUHJvJTIwZWFyYnVkc3xlbnwxfHx8fDE3NzMyMzMwMDF8MA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral",
     condition: "Excelente",
-    rating: 4.8,
     color: "Cinzento Sideral",
     stock: 3,
     timeline: {
@@ -488,7 +450,6 @@ export const products: Product[] = [
     price: 79,
     image: "https://images.unsplash.com/photo-1608488458196-61cd3a720de8?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxKQkwlMjBzcGVha2VyJTIwYmx1ZXRvb3RofGVufDF8fHx8MTc3MzI1OTE4OXww&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral",
     condition: "Como Novo",
-    rating: 4.6,
     color: "Preto",
     stock: 25,
     timeline: {
@@ -513,7 +474,6 @@ export const products: Product[] = [
     price: 149,
     image: "https://images.unsplash.com/photo-1646425040945-8db4a756dd95?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxTb25vcyUyMHNwZWFrZXIlMjB3aXJlbGVzc3xlbnwxfHx8fDE3NzMyNTkxODl8MA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral",
     condition: "Excelente",
-    rating: 4.7,
     color: "Branco",
     stock: 5,
     timeline: {
@@ -538,7 +498,6 @@ export const products: Product[] = [
     price: 119,
     image: "https://images.unsplash.com/photo-1608488458196-61cd3a720de8?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxKQkwlMjBzcGVha2VyJTIwYmx1ZXRvb3RofGVufDF8fHx8MTc3MzI1OTE4OXww&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral",
     condition: "Como Novo",
-    rating: 4.7,
     color: "Azul",
     stock: 18,
     timeline: {
@@ -563,7 +522,6 @@ export const products: Product[] = [
     price: 179,
     image: "https://images.unsplash.com/photo-1608488458196-61cd3a720de8?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxKQkwlMjBzcGVha2VyJTIwYmx1ZXRvb3RofGVufDF8fHx8MTc3MzI1OTE4OXww&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral",
     condition: "Excelente",
-    rating: 4.8,
     color: "Preto Triplo",
     stock: 11,
     timeline: {
@@ -590,7 +548,6 @@ export const products: Product[] = [
     price: 19,
     image: "https://images.unsplash.com/photo-1760708825913-65a50b3dc39b?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxVU0ItQyUyMGNoYXJnaW5nJTIwY2FibGV8ZW58MXx8fHwxNzczMjU5MTg5fDA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral",
     condition: "Como Novo",
-    rating: 4.5,
     color: "Branco",
     stock: 30,
     timeline: {
@@ -615,7 +572,6 @@ export const products: Product[] = [
     price: 35,
     image: "https://images.unsplash.com/photo-1633381638729-27f730955c23?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHx3aXJlbGVzcyUyMGNoYXJnZXIlMjBwYWR8ZW58MXx8fHwxNzczMjU5MTkwfDA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral",
     condition: "Excelente",
-    rating: 4.7,
     color: "Branco",
     stock: 15,
     timeline: {
@@ -640,7 +596,6 @@ export const products: Product[] = [
     price: 29,
     image: "https://images.unsplash.com/photo-1633381638729-27f730955c23?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHx3aXJlbGVzcyUyMGNoYXJnZXIlMjBwYWR8ZW58MXx8fHwxNzczMjU5MTkwfDA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral",
     condition: "Como Novo",
-    rating: 4.8,
     color: "Preto",
     stock: 22,
     timeline: {
