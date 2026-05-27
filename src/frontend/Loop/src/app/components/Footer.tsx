@@ -32,17 +32,6 @@ export function Footer() {
             </ul>
           </div>
         </div>
-
-        <div className="mt-12 pt-8 border-t border-gray-800 text-sm text-center">
-          <div className="flex flex-col sm:flex-row items-center justify-between gap-4 mb-4">
-            <p>&copy; {new Date().getFullYear()} LOOP. Todos os direitos reservados.</p>
-            <div className="flex gap-4">
-              <Link to="/termos-de-servico" className="hover:text-emerald-400 transition-colors">
-                Termos de Serviço
-              </Link>
-            </div>
-          </div>
-        </div>
       </div>
     </footer>
   );

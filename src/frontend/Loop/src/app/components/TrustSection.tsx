@@ -16,11 +16,6 @@ const benefits = [
     title: "Devolução 30 Dias",
     description: "Não ficou satisfeito? Devolvemos o dinheiro",
   },
-  {
-    icon: Headset,
-    title: "Suporte Premium",
-    description: "Apoio ao cliente sempre disponível",
-  },
 ];
 
 export function TrustSection() {

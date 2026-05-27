@@ -36,31 +36,7 @@ const slides = [
     cta: "Explorar Produtos",
     link: "/produtos",
     bgColor: "from-emerald-900/80 to-emerald-700/80",
-  },
-  {
-    title: "Computadores Premium Recondicionados",
-    subtitle: "Performance profissional a preços acessíveis",
-    image: "https://images.unsplash.com/flagged/photo-1576697010739-6373b63f3204?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxsYXB0b3AlMjBjb21wdXRlciUyMHdvcmtzcGFjZXxlbnwxfHx8fDE3NzMyMzI3NDF8MA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral",
-    cta: "Ver Computadores",
-    link: "/produtos?categoria=Computador",
-    bgColor: "from-gray-900/80 to-gray-700/80",
-  },
-  {
-    title: "Sustentabilidade em Cada Escolha",
-    subtitle: "Reduza o impacto ambiental sem comprometer a qualidade",
-    image: "https://images.unsplash.com/photo-1719256969258-2be8c184e3f9?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxzdXN0YWluYWJsZSUyMHRlY2hub2xvZ3klMjBncmVlbnxlbnwxfHx8fDE3NzMyNTg1MzB8MA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral",
-    cta: "Saiba Mais",
-    link: "/sobre",
-    bgColor: "from-emerald-800/80 to-teal-700/80",
-  },
-  {
-    title: "Áudio de Alta Qualidade",
-    subtitle: "Auscultadores e colunas recondicionados das melhores marcas",
-    image: "https://images.unsplash.com/photo-1640300065113-738f2abb8ba6?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHx3aXJlbGVzcyUyMGhlYWRwaG9uZXMlMjBhdWRpb3xlbnwxfHx8fDE3NzMyNTIwMzF8MA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral",
-    cta: "Ver Áudio",
-    link: "/produtos?categoria=Auscultadores",
-    bgColor: "from-slate-900/80 to-slate-700/80",
-  },
+  }
 ];
 
 export function HeroSlider() {

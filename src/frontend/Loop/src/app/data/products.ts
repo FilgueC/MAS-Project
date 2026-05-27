@@ -148,7 +148,7 @@ export const products: Product[] = [
     price: 1399,
     image: "https://images.unsplash.com/photo-1551533390-b80b6ffa7816?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxNYWNCb29rJTIwUHJvJTIwbGFwdG9wfGVufDF8fHx8MTc3MzI1OTE4NHww&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral",
     condition: "Excelente",
-    storage: "512GB SSD",
+    storage: "512GB",
     color: "Cinzento Sideral",
     stock: 3,
     timeline: {
@@ -157,7 +157,7 @@ export const products: Product[] = [
       receivedForRefurbishment: "2023-06-05",
       qualityTested: "2023-06-10",
     },
-    specs: ["M2 Pro chip", "16GB RAM", "512GB SSD"],
+    specs: ["M2 Pro chip", "16GB RAM", "512GB "],
     ecoImpact: {
       co2Saved: 15,
       waterSaved: 75,
@@ -173,7 +173,7 @@ export const products: Product[] = [
     price: 1099,
     image: "https://images.unsplash.com/photo-1622286346003-c5c7e63b1088?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxEZWxsJTIwWFBTJTIwbGFwdG9wJTIwY29tcHV0ZXJ8ZW58MXx8fHwxNzczMjU5MTg1fDA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral",
     condition: "Como Novo",
-    storage: "1TB SSD",
+    storage: "1TB ",
     color: "Platina",
     stock: 12,
     timeline: {
@@ -182,7 +182,7 @@ export const products: Product[] = [
       receivedForRefurbishment: "2023-07-05",
       qualityTested: "2023-07-10",
     },
-    specs: ["12th Gen Intel Core i7", "16GB RAM", "1TB SSD"],
+    specs: ["12th Gen Intel Core i7", "16GB RAM", "1TB "],
     ecoImpact: {
       co2Saved: 14,
       waterSaved: 70,
@@ -198,7 +198,7 @@ export const products: Product[] = [
     price: 599,
     image: "https://images.unsplash.com/photo-1743865320670-8f4722dd3542?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxIUCUyMGxhcHRvcCUyMHByb2Zlc3Npb25hbHxlbnwxfHx8fDE3NzMyNTkxODV8MA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral",
     condition: "Excelente",
-    storage: "512GB SSD",
+    storage: "512GB ",
     color: "Prata Natural",
     stock: 7,
     timeline: {
@@ -207,7 +207,7 @@ export const products: Product[] = [
       receivedForRefurbishment: "2023-08-05",
       qualityTested: "2023-08-10",
     },
-    specs: ["12th Gen Intel Core i5", "8GB RAM", "512GB SSD"],
+    specs: ["12th Gen Intel Core i5", "8GB RAM", "512GB "],
     ecoImpact: {
       co2Saved: 10,
       waterSaved: 50,
@@ -223,7 +223,7 @@ export const products: Product[] = [
     price: 849,
     image: "https://images.unsplash.com/photo-1763162410742-1d0097cea556?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxMZW5vdm8lMjBUaGlua1BhZCUyMGxhcHRvcHxlbnwxfHx8fDE3NzMyNTkxODV8MA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral",
     condition: "Excelente",
-    storage: "256GB SSD",
+    storage: "256GB ",
     color: "Preto",
     stock: 6,
     timeline: {
@@ -232,7 +232,7 @@ export const products: Product[] = [
       receivedForRefurbishment: "2023-09-05",
       qualityTested: "2023-09-10",
     },
-    specs: ["12th Gen Intel Core i7", "16GB RAM", "256GB SSD"],
+    specs: ["12th Gen Intel Core i7", "16GB RAM", "256GB "],
     ecoImpact: {
       co2Saved: 12,
       waterSaved: 60,
@@ -334,7 +334,7 @@ export const products: Product[] = [
       receivedForRefurbishment: "2024-01-05",
       qualityTested: "2024-01-10",
     },
-    specs: ["12th Gen Intel Core i7", "16GB RAM", "256GB SSD"],
+    specs: ["12th Gen Intel Core i7", "16GB RAM", "256GB "],
     ecoImpact: {
       co2Saved: 14,
       waterSaved: 70,

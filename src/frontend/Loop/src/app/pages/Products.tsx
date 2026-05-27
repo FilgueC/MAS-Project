@@ -34,24 +34,50 @@ export function Products() {
   }, [categoryFromUrl]);
 
   const categories = [
-    { id: "Todos", name: "Todos", icon: "📱" },
-    { id: "Telemóvel", name: "Telemóveis", icon: "📱" },
-    { id: "Computador", name: "Computadores", icon: "💻" },
-    { id: "Tablet", name: "Tablets", icon: "📱" },
-    { id: "Auscultadores", name: "Auscultadores", icon: "🎧" },
-    { id: "Colunas", name: "Colunas", icon: "🔊" },
-    { id: "Acessórios", name: "Acessórios", icon: "🔌" }
+    { id: "Todos", name: "Todos"},
+    { id: "Telemóvel", name: "Telemóveis"},
+    { id: "Computador", name: "Computadores" },
+    { id: "Tablet", name: "Tablets"},
+    { id: "Auscultadores", name: "Auscultadores"},
+    { id: "Colunas", name: "Colunas"},
+    { id: "Acessórios", name: "Acessórios" }
   ];
 
-  const brands = Array.from(new Set(products.map(p => p.brand))).sort();
-  const storages = Array.from(new Set(products.map(p => p.storage).filter(Boolean) as string[])).sort();
-  const conditions = Array.from(new Set(products.map(p => p.condition)));
+  // --- ORGANIZAÇÃO E LIMPEZA DOS FILTROS ---
+
+  // Marcas por ordem alfabética (A-Z)
+  const brands = Array.from(new Set(products.map(p => p.brand.trim()))).sort();
+
+  // Função auxiliar para converter o texto de armazenamento em valor numérico real (MB) para ordenar corretamente
+  const parseStorageToValue = (storageStr: string): number => {
+    const value = parseInt(storageStr, 10) || 0;
+    if (storageStr.toUpperCase().includes("TB")) {
+      return value * 1024 * 1024; // Converte TB para equivalente em MB
+    }
+    if (storageStr.toUpperCase().includes("GB")) {
+      return value * 1024; // Converte GB para MB
+    }
+    return value;
+  };
+
+  // Armazenamentos limpos e ordenados por tamanho real (64GB -> 128GB -> 256GB -> 512GB -> 1TB)
+  const storages = Array.from(
+    new Set(products.map(p => p.storage?.trim()).filter(Boolean) as string[])
+  ).sort((a, b) => parseStorageToValue(a) - parseStorageToValue(b));
+
+  // Condições ordenadas por nível de qualidade/estado de uso lógico
+  const conditionOrder = ["Como Novo", "Excelente", "Muito Bom"];
+  const conditions = Array.from(
+    new Set(products.map(p => p.condition.trim()))
+  ).sort((a, b) => conditionOrder.indexOf(a) - conditionOrder.indexOf(b));
+
+  // -----------------------------------------
 
   const filteredProducts = products.filter(p => {
     const categoryMatch = selectedCategory === "Todos" || p.category === selectedCategory;
-    const brandMatch = selectedBrands.length === 0 || selectedBrands.includes(p.brand);
-    const storageMatch = selectedStorages.length === 0 || (p.storage && selectedStorages.includes(p.storage));
-    const conditionMatch = selectedConditions.length === 0 || selectedConditions.includes(p.condition);
+    const brandMatch = selectedBrands.length === 0 || selectedBrands.includes(p.brand.trim());
+    const storageMatch = selectedStorages.length === 0 || (p.storage && selectedStorages.includes(p.storage.trim()));
+    const conditionMatch = selectedConditions.length === 0 || selectedConditions.includes(p.condition.trim());
     const searchMatch = searchQuery === "" ||
       p.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
       p.brand.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -95,15 +121,11 @@ export function Products() {
     navigate("/produtos");
   };
 
-  // UC1.1 Cenário 3: tentar novamente após falha
   const handleRetry = () => {
     setServerError(false);
     setIsLoading(true);
-    // Simula nova tentativa de carregamento
     setTimeout(() => {
       setIsLoading(false);
-      // Se voltar a falhar, repor o erro:
-      // setServerError(true);
     }, 1000);
   };
 
@@ -145,7 +167,6 @@ export function Products() {
     toast.success("Produto adicionado ao carrinho!");
   };
 
-  // UC1.1 Cenário 3: falha de comunicação com servidor
   if (serverError) {
     return (
       <div className="min-h-screen bg-gray-50">
@@ -216,7 +237,7 @@ export function Products() {
                       : "bg-white text-gray-700 hover:bg-gray-100"
                   }`}
                 >
-                  {category.icon} {category.name}
+                  {category} {category.name}
                 </button>
               ))}
             </div>
@@ -259,7 +280,7 @@ export function Products() {
                   <div className="grid md:grid-cols-4 gap-6">
                     {/* Price Filter */}
                     <div>
-                      <h4 className="text-sm text-gray-700 mb-3">Preço (€)</h4>
+                      <h4 className="text-sm font-medium text-gray-700 mb-3">Preço (€)</h4>
                       <div className="space-y-2">
                         <input
                           type="number"
@@ -278,55 +299,55 @@ export function Products() {
                       </div>
                     </div>
 
-                    {/* Brand Filter */}
+                    {/* Brand Filter (with Scroll) */}
                     <div>
-                      <h4 className="text-sm text-gray-700 mb-3">Marca</h4>
-                      <div className="space-y-2">
+                      <h4 className="text-sm font-medium text-gray-700 mb-3">Marca</h4>
+                      <div className="max-h-40 overflow-y-auto pr-2 space-y-2 border border-gray-100 rounded-lg p-2 bg-gray-50/50 scrollbar-thin">
                         {brands.map(brand => (
-                          <label key={brand} className="flex items-center gap-2 cursor-pointer">
+                          <label key={brand} className="flex items-center gap-2 cursor-pointer hover:bg-gray-100 p-1 rounded transition-colors">
                             <input
                               type="checkbox"
                               checked={selectedBrands.includes(brand)}
                               onChange={() => toggleBrand(brand)}
-                              className="w-4 h-4 text-emerald-600 rounded"
+                              className="w-4 h-4 text-emerald-600 rounded focus:ring-emerald-500 border-gray-300"
                             />
-                            <span className="text-gray-700">{brand}</span>
+                            <span className="text-gray-700 text-sm select-none">{brand}</span>
                           </label>
                         ))}
                       </div>
                     </div>
 
-                    {/* Storage Filter */}
+                    {/* Storage Filter (with Scroll) */}
                     <div>
-                      <h4 className="text-sm text-gray-700 mb-3">Armazenamento</h4>
-                      <div className="space-y-2">
+                      <h4 className="text-sm font-medium text-gray-700 mb-3">Armazenamento</h4>
+                      <div className="max-h-40 overflow-y-auto pr-2 space-y-2 border border-gray-100 rounded-lg p-2 bg-gray-50/50 scrollbar-thin">
                         {storages.map(storage => (
-                          <label key={storage} className="flex items-center gap-2 cursor-pointer">
+                          <label key={storage} className="flex items-center gap-2 cursor-pointer hover:bg-gray-100 p-1 rounded transition-colors">
                             <input
                               type="checkbox"
                               checked={selectedStorages.includes(storage)}
                               onChange={() => toggleStorage(storage)}
-                              className="w-4 h-4 text-emerald-600 rounded"
+                              className="w-4 h-4 text-emerald-600 rounded focus:ring-emerald-500 border-gray-300"
                             />
-                            <span className="text-gray-700">{storage}</span>
+                            <span className="text-gray-700 text-sm select-none">{storage}</span>
                           </label>
                         ))}
                       </div>
                     </div>
 
-                    {/* Condition Filter */}
+                    {/* Condition Filter (with Scroll) */}
                     <div>
-                      <h4 className="text-sm text-gray-700 mb-3">Estado</h4>
-                      <div className="space-y-2">
+                      <h4 className="text-sm font-medium text-gray-700 mb-3">Estado</h4>
+                      <div className="max-h-40 overflow-y-auto pr-2 space-y-2 border border-gray-100 rounded-lg p-2 bg-gray-50/50 scrollbar-thin">
                         {conditions.map(condition => (
-                          <label key={condition} className="flex items-center gap-2 cursor-pointer">
+                          <label key={condition} className="flex items-center gap-2 cursor-pointer hover:bg-gray-100 p-1 rounded transition-colors">
                             <input
                               type="checkbox"
                               checked={selectedConditions.includes(condition)}
                               onChange={() => toggleCondition(condition)}
-                              className="w-4 h-4 text-emerald-600 rounded"
+                              className="w-4 h-4 text-emerald-600 rounded focus:ring-emerald-500 border-gray-300"
                             />
-                            <span className="text-gray-700">{condition}</span>
+                            <span className="text-gray-700 text-sm select-none">{condition}</span>
                           </label>
                         ))}
                       </div>
@@ -411,7 +432,6 @@ export function Products() {
 
                   {/* Badges */}
                   <div className="absolute top-4 left-4 flex flex-col gap-2">
-                    {/* UC1.1 Cenário 1: classificação de recondicionamento visível no card */}
                     <span className="bg-white/95 text-gray-900 px-3 py-1 rounded-full text-sm flex items-center gap-1">
                       <Shield className="w-3 h-3 text-emerald-600" />
                       {product.condition}
@@ -441,7 +461,6 @@ export function Products() {
                   <div className="text-sm text-emerald-700 mb-2">{product.brand}</div>
                   <h3 className="text-xl mb-2 text-gray-900">{product.name}</h3>
 
-                  {/* UC1.1 Cenário 1: imagem ✓, preço ✓, classificação de recondicionamento ✓ */}
                   <div className="flex items-center gap-2 mb-4">
                     <span className="text-sm text-gray-600">Garantia 24 meses</span>
                     <span className="text-sm text-gray-400">•</span>
@@ -476,7 +495,7 @@ export function Products() {
             ))}
           </div>
 
-          {/* UC1.1 Cenário 2: Sem resultados — mensagem exata + botão limpar filtros */}
+          {/* UC1.1 Cenário 2: Sem resultados */}
           {filteredProducts.length === 0 && (
             <div className="bg-white rounded-2xl p-12 text-center shadow-md">
               <div className="text-6xl mb-4">🔍</div>

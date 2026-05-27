@@ -10,7 +10,6 @@ import { Account } from "./pages/Account";
 import { Orders } from "./pages/Orders";
 import { Favorites } from "./pages/Favorites";
 import { Settings } from "./pages/Settings";
-import { TermsOfService } from "./pages/TermsOfService";
 import { Supplier } from "./pages/Supplier";
 
 
@@ -60,10 +59,6 @@ export const router = createBrowserRouter([
   {
     path: "/conta/definicoes",
     Component: Settings,
-  },
-  {
-    path: "/termos-de-servico",
-    Component: TermsOfService,
   },
   {
     path: "/fornecedor",
