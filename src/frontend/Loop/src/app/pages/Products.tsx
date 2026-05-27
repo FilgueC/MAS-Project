@@ -1,6 +1,6 @@
 import { Header } from "../components/Header";
 import { Footer } from "../components/Footer";
-import { Star, Shield, SlidersHorizontal, Heart, X, Search } from "lucide-react";
+import { Shield, SlidersHorizontal, Heart, X, Search, RefreshCw, AlertCircle } from "lucide-react";
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { products } from "../data/products";
@@ -21,10 +21,12 @@ export function Products() {
   const [searchQuery, setSearchQuery] = useState("");
   const [minPrice, setMinPrice] = useState<number | "">("");
   const [maxPrice, setMaxPrice] = useState<number | "">("");
+  // UC1.1 Cenário 3: estado de erro de comunicação com servidor
+  const [serverError, setServerError] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const { user, addToFavorites, removeFromFavorites, isFavorite } = useAuth();
   const { addToCart } = useCart();
 
-  // Update selected category when URL changes
   useEffect(() => {
     if (categoryFromUrl) {
       setSelectedCategory(categoryFromUrl);
@@ -41,28 +43,21 @@ export function Products() {
     { id: "Acessórios", name: "Acessórios", icon: "🔌" }
   ];
 
-  // Extract unique brands, storages, and conditions from products
   const brands = Array.from(new Set(products.map(p => p.brand))).sort();
   const storages = Array.from(new Set(products.map(p => p.storage).filter(Boolean) as string[])).sort();
   const conditions = Array.from(new Set(products.map(p => p.condition)));
 
-  // Filter products
   const filteredProducts = products.filter(p => {
     const categoryMatch = selectedCategory === "Todos" || p.category === selectedCategory;
     const brandMatch = selectedBrands.length === 0 || selectedBrands.includes(p.brand);
     const storageMatch = selectedStorages.length === 0 || (p.storage && selectedStorages.includes(p.storage));
     const conditionMatch = selectedConditions.length === 0 || selectedConditions.includes(p.condition);
-
-    // Search query filter (searches in name, brand, category)
     const searchMatch = searchQuery === "" ||
       p.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
       p.brand.toLowerCase().includes(searchQuery.toLowerCase()) ||
       p.category.toLowerCase().includes(searchQuery.toLowerCase());
-
-    // Price filter
     const minPriceMatch = minPrice === "" || p.price >= minPrice;
     const maxPriceMatch = maxPrice === "" || p.price <= maxPrice;
-
     return categoryMatch && brandMatch && storageMatch && conditionMatch && searchMatch && minPriceMatch && maxPriceMatch;
   });
 
@@ -72,19 +67,19 @@ export function Products() {
   };
 
   const toggleBrand = (brand: string) => {
-    setSelectedBrands(prev => 
+    setSelectedBrands(prev =>
       prev.includes(brand) ? prev.filter(b => b !== brand) : [...prev, brand]
     );
   };
 
   const toggleStorage = (storage: string) => {
-    setSelectedStorages(prev => 
+    setSelectedStorages(prev =>
       prev.includes(storage) ? prev.filter(s => s !== storage) : [...prev, storage]
     );
   };
 
   const toggleCondition = (condition: string) => {
-    setSelectedConditions(prev => 
+    setSelectedConditions(prev =>
       prev.includes(condition) ? prev.filter(c => c !== condition) : [...prev, condition]
     );
   };
@@ -100,6 +95,18 @@ export function Products() {
     navigate("/produtos");
   };
 
+  // UC1.1 Cenário 3: tentar novamente após falha
+  const handleRetry = () => {
+    setServerError(false);
+    setIsLoading(true);
+    // Simula nova tentativa de carregamento
+    setTimeout(() => {
+      setIsLoading(false);
+      // Se voltar a falhar, repor o erro:
+      // setServerError(true);
+    }, 1000);
+  };
+
   const activeFiltersCount = selectedBrands.length + selectedStorages.length + selectedConditions.length +
     (selectedCategory !== "Todos" ? 1 : 0) +
     (searchQuery !== "" ? 1 : 0) +
@@ -111,7 +118,6 @@ export function Products() {
       navigate("/login");
       return;
     }
-
     if (isFavorite(product.id)) {
       removeFromFavorites(product.id);
       toast.success("Produto removido dos favoritos");
@@ -139,18 +145,44 @@ export function Products() {
     toast.success("Produto adicionado ao carrinho!");
   };
 
+  // UC1.1 Cenário 3: falha de comunicação com servidor
+  if (serverError) {
+    return (
+      <div className="min-h-screen bg-gray-50">
+        <Header />
+        <main className="pt-20">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-32 text-center">
+            <div className="bg-white rounded-2xl shadow-md p-12 max-w-md mx-auto">
+              <AlertCircle className="w-16 h-16 text-red-400 mx-auto mb-4" />
+              <h2 className="text-2xl text-gray-900 mb-2">Erro de ligação</h2>
+              <p className="text-gray-600 mb-6">
+                Ocorreu um erro ao comunicar com o servidor. Por favor, tente novamente.
+              </p>
+              <button
+                onClick={handleRetry}
+                disabled={isLoading}
+                className="flex items-center gap-2 mx-auto bg-emerald-600 text-white px-6 py-3 rounded-lg hover:bg-emerald-700 transition-colors disabled:opacity-60"
+              >
+                <RefreshCw className={`w-5 h-5 ${isLoading ? "animate-spin" : ""}`} />
+                {isLoading ? "A tentar novamente..." : "Tentar novamente"}
+              </button>
+            </div>
+          </div>
+        </main>
+        <Footer />
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-gray-50">
       <Header />
-      
+
       <main className="pt-20">
         {/* Page Header */}
         <div className="bg-gradient-to-r from-emerald-700 to-teal-600 text-white py-16">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <h1 className="text-4xl md:text-5xl mb-4">
-              Todos os Produtos
-            </h1>
-            <p className="text-xl text-emerald-100">
+            <p className="text-3xl text-emerald-100 mb-4">
               Descubra a nossa seleção completa de produtos recondicionados
             </p>
           </div>
@@ -189,7 +221,7 @@ export function Products() {
               ))}
             </div>
 
-            <button 
+            <button
               onClick={() => setShowFilters(!showFilters)}
               className="flex items-center gap-2 px-4 py-2 bg-white text-gray-700 rounded-lg hover:bg-gray-100 transition-colors relative"
             >
@@ -318,10 +350,7 @@ export function Products() {
                           <span className="inline-flex items-center gap-2 bg-emerald-100 text-emerald-700 px-3 py-1 rounded-full text-sm">
                             {categories.find(c => c.id === selectedCategory)?.icon}{" "}
                             {categories.find(c => c.id === selectedCategory)?.name}
-                            <button
-                              onClick={() => handleCategorySelect("Todos")}
-                              className="hover:bg-emerald-200 rounded-full p-0.5 transition-colors"
-                            >
+                            <button onClick={() => handleCategorySelect("Todos")} className="hover:bg-emerald-200 rounded-full p-0.5 transition-colors">
                               <X className="w-3 h-3" />
                             </button>
                           </span>
@@ -329,10 +358,7 @@ export function Products() {
                         {selectedBrands.map(brand => (
                           <span key={brand} className="inline-flex items-center gap-2 bg-blue-100 text-blue-700 px-3 py-1 rounded-full text-sm">
                             {brand}
-                            <button
-                              onClick={() => toggleBrand(brand)}
-                              className="hover:bg-blue-200 rounded-full p-0.5 transition-colors"
-                            >
+                            <button onClick={() => toggleBrand(brand)} className="hover:bg-blue-200 rounded-full p-0.5 transition-colors">
                               <X className="w-3 h-3" />
                             </button>
                           </span>
@@ -340,10 +366,7 @@ export function Products() {
                         {selectedStorages.map(storage => (
                           <span key={storage} className="inline-flex items-center gap-2 bg-purple-100 text-purple-700 px-3 py-1 rounded-full text-sm">
                             {storage}
-                            <button
-                              onClick={() => toggleStorage(storage)}
-                              className="hover:bg-purple-200 rounded-full p-0.5 transition-colors"
-                            >
+                            <button onClick={() => toggleStorage(storage)} className="hover:bg-purple-200 rounded-full p-0.5 transition-colors">
                               <X className="w-3 h-3" />
                             </button>
                           </span>
@@ -351,10 +374,7 @@ export function Products() {
                         {selectedConditions.map(condition => (
                           <span key={condition} className="inline-flex items-center gap-2 bg-amber-100 text-amber-700 px-3 py-1 rounded-full text-sm">
                             {condition}
-                            <button
-                              onClick={() => toggleCondition(condition)}
-                              className="hover:bg-amber-200 rounded-full p-0.5 transition-colors"
-                            >
+                            <button onClick={() => toggleCondition(condition)} className="hover:bg-amber-200 rounded-full p-0.5 transition-colors">
                               <X className="w-3 h-3" />
                             </button>
                           </span>
@@ -384,15 +404,16 @@ export function Products() {
               >
                 {/* Product Image */}
                 <div className="relative h-64 overflow-hidden bg-gray-100">
-                  <div 
+                  <div
                     className="absolute inset-0 bg-cover bg-center transition-transform duration-300 group-hover:scale-110"
                     style={{ backgroundImage: `url(${product.image})` }}
                   />
-                  
+
                   {/* Badges */}
                   <div className="absolute top-4 left-4 flex flex-col gap-2">
+                    {/* UC1.1 Cenário 1: classificação de recondicionamento visível no card */}
                     <span className="bg-white/95 text-gray-900 px-3 py-1 rounded-full text-sm flex items-center gap-1">
-                      <Shield className="w-3 h-3" />
+                      <Shield className="w-3 h-3 text-emerald-600" />
                       {product.condition}
                     </span>
                   </div>
@@ -405,10 +426,10 @@ export function Products() {
                     }}
                     className="absolute top-4 right-4 bg-white/90 p-2 rounded-full hover:bg-white transition-colors"
                   >
-                    <Heart 
+                    <Heart
                       className={`w-5 h-5 ${
-                        user && isFavorite(product.id) 
-                          ? "fill-red-500 text-red-500" 
+                        user && isFavorite(product.id)
+                          ? "fill-red-500 text-red-500"
                           : "text-gray-600"
                       }`}
                     />
@@ -420,10 +441,8 @@ export function Products() {
                   <div className="text-sm text-emerald-700 mb-2">{product.brand}</div>
                   <h3 className="text-xl mb-2 text-gray-900">{product.name}</h3>
 
-                  {/* Rating & Stock */}
+                  {/* UC1.1 Cenário 1: imagem ✓, preço ✓, classificação de recondicionamento ✓ */}
                   <div className="flex items-center gap-2 mb-4">
-                    
-                    
                     <span className="text-sm text-gray-600">Garantia 24 meses</span>
                     <span className="text-sm text-gray-400">•</span>
                     <span className={`text-sm ${product.stock > 0 ? "text-green-600" : "text-red-600"}`}>
@@ -457,11 +476,13 @@ export function Products() {
             ))}
           </div>
 
-          {/* No Results */}
+          {/* UC1.1 Cenário 2: Sem resultados — mensagem exata + botão limpar filtros */}
           {filteredProducts.length === 0 && (
             <div className="bg-white rounded-2xl p-12 text-center shadow-md">
               <div className="text-6xl mb-4">🔍</div>
-              <h3 className="text-2xl text-gray-900 mb-2">Nenhum produto encontrado</h3>
+              <h3 className="text-2xl text-gray-900 mb-2">
+                Não foram encontrados resultados para a sua pesquisa
+              </h3>
               <p className="text-gray-600 mb-6">
                 Tente ajustar os seus filtros ou explore outras categorias
               </p>

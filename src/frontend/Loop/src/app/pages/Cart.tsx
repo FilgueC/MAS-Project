@@ -149,12 +149,6 @@ export function Cart() {
             <ShoppingBag className="w-24 h-24 mx-auto mb-6 text-gray-300" />
             <h1 className="text-3xl mb-4 text-gray-900">O seu carrinho está vazio</h1>
             <p className="text-gray-600 mb-8">Adicione produtos ao carrinho para continuar</p>
-            <button
-              onClick={() => navigate("/produtos")}
-              className="bg-emerald-600 text-white px-8 py-3 rounded-lg hover:bg-emerald-700 transition-colors"
-            >
-              Explorar Produtos
-            </button>
           </div>
         </main>
         <Footer />
