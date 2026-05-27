@@ -11,7 +11,6 @@ import { motion } from "motion/react";
 import { useState } from "react";
 import { useNavigate } from "react-router";
 import { toast } from "sonner";
-import { validateCoupon, calculateDiscount, type Coupon } from "../data/coupons";
 
 type ShippingMethod = "ctt" | "dhl" | "pickup";
 type PaymentMethod = "mbway" | "revolut" | "visa" | "mastercard";

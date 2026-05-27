@@ -24,40 +24,16 @@ export function Account() {
 
   const menuItems = [
     {
-      icon: Wallet,
-      title: "Carteira LOOP",
-      description: `Saldo disponível: €${walletBalance.toFixed(2)} — Créditos de Trade-In`,
-      path: "/conta/carteira",
-    },
-    {
       icon: Package,
       title: "As Minhas Encomendas",
       description: "Ver histórico e estado das encomendas",
       path: "/conta/encomendas",
     },
     {
-      icon: MessageCircle,
-      title: "Mensagens e Notificações",
-      description: "Ver notificações e avaliações de Trade-In",
-      path: "/conta/mensagens",
-    },
-    {
       icon: Heart,
       title: "Os Meus Favoritos",
       description: "Produtos guardados para mais tarde",
       path: "/conta/favoritos",
-    },
-    {
-      icon: RefreshCw,
-      title: "Trade-In",
-      description: "Venda o seu dispositivo antigo",
-      path: "/conta/trade-in",
-    },
-    {
-      icon: AlertTriangle,
-      title: "Reclamações & Devoluções",
-      description: "Submeter e acompanhar reclamações e devoluções (prazo 30 dias)",
-      path: "/conta/reclamacoes",
     },
     {
       icon: Settings,

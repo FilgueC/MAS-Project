@@ -2,7 +2,7 @@ import { useParams, useNavigate } from "react-router";
 import { Header } from "../components/Header";
 import { Footer } from "../components/Footer";
 import { products } from "../data/products";
-import { Star, Shield, Check, Heart, ChevronLeft, Leaf, Droplet, Zap, Trash2} from "lucide-react";
+import { Star, Shield, Check, Heart, ChevronLeft, Leaf, Droplet, Zap, Trash2, MessageSquare, Send } from "lucide-react";
 import { useState } from "react";
 import { useCart } from "../context/CartContext";
 import { useAuth } from "../context/AuthContext";
@@ -12,7 +12,6 @@ import { toast } from "sonner";
 interface UserReview {
   id: string;
   userName: string;
-  rating: number;
   comment: string;
   date: string;
   verified: boolean;
@@ -25,6 +24,12 @@ export function ProductDetail() {
   const { user, addToFavorites, removeFromFavorites, isFavorite } = useAuth();
   const [selectedWarranty, setSelectedWarranty] = useState<"24" | "36">("24");
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
+  const [reviewComment, setReviewComment] = useState("");
+  const [userReviews, setUserReviews] = useState<UserReview[]>(() => {
+    const saved = localStorage.getItem(`product_reviews_${id}`);
+    return saved ? JSON.parse(saved) : [];
+  });
+  const [showReviewForm, setShowReviewForm] = useState(false);
 
   const product = products.find((p) => p.id === Number(id));
 
@@ -35,7 +40,7 @@ export function ProductDetail() {
         <main className="pt-32 pb-16">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
             <h1 className="text-3xl mb-4 text-gray-900">Produto não encontrado</h1>
-            <button
+            <button 
               onClick={() => navigate("/produtos")}
               className="bg-emerald-600 text-white px-6 py-3 rounded-lg hover:bg-emerald-700 transition-colors"
             >
@@ -48,17 +53,10 @@ export function ProductDetail() {
     );
   }
 
-  // UC1.2 Cenário 2 (BR-02): histórico técnico obrigatório para permitir compra
-  const hasServiceHistory = product.serviceHistory !== undefined && product.serviceHistory !== null;
-
-  // UC1.2 Cenário 3: produto esgotado — sugestões de produtos similares
-  const similarProducts = products
-    .filter(p => p.id !== product.id && p.category === product.category && p.stock > 0)
-    .slice(0, 3);
-
+  // Generate multiple product images for gallery
   const productImages = product.images || [
     product.image,
-    "https://images.unsplash.com/photo-1609085174749-243b6a90e6b6?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxpUGhvbmUlMjBzbWFydHBob25lJTIwY2xvc2UtdXB8ZW58MXx8fHwxNzczNDM2NDc3fDA&ixlib=rb-4.1.0&q=80&w=1080",
+    "https://images.unsplash.com/photo-1609085174749-243b6a90e6b6?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxpUGhvbmUlMjBzbWFydHBob25lJTIwY2xvc2UtdXB8ZW58MXx8fHwxNzczNDM2NDc3fDA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral",
     "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR5wmSYsGGurcZU5vvWIQFJiLZMUasiNU_64Q&s",
     "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSpaG9K4SQ9uBUwSH1Jusl3L1AxRdrqsdSclw&s",
   ];
@@ -82,6 +80,7 @@ export function ProductDetail() {
       navigate("/login");
       return;
     }
+
     if (isFavorite(product.id)) {
       removeFromFavorites(product.id);
       toast.success("Produto removido dos favoritos");
@@ -135,10 +134,7 @@ export function ProductDetail() {
       navigate("/login");
       return;
     }
-    if (userReviewRating === 0) {
-      toast.error("Selecione uma classificação de 1 a 5 estrelas");
-      return;
-    }
+
     if (!reviewComment.trim()) {
       toast.error("Escreva um comentário");
       return;
@@ -146,7 +142,6 @@ export function ProductDetail() {
     const newReview: UserReview = {
       id: `rev-${Date.now()}`,
       userName: user.name,
-      rating: userReviewRating,
       comment: reviewComment,
       date: new Date().toISOString(),
       verified: true,
@@ -155,18 +150,14 @@ export function ProductDetail() {
     setUserReviews(updated);
     localStorage.setItem(`product_reviews_${id}`, JSON.stringify(updated));
     setReviewComment("");
-    setUserReviewRating(0);
     setShowReviewForm(false);
     toast.success("Avaliação publicada com sucesso! 🌟");
   };
 
-  // Botão de carrinho deve estar desativado se: sem stock OU sem histórico técnico (BR-02)
-  const canAddToCart = product.stock > 0 && hasServiceHistory;
-
   return (
     <div className="min-h-screen bg-gray-50">
       <Header />
-
+      
       <main className="pt-24 pb-16">
         {/* Back Button */}
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-6">
@@ -188,10 +179,13 @@ export function ProductDetail() {
               transition={{ duration: 0.5 }}
             >
               <div className="bg-white rounded-2xl shadow-lg overflow-hidden">
+                {/* Main Image */}
                 <div
                   className="h-96 bg-cover bg-center cursor-pointer"
                   style={{ backgroundImage: `url(${productImages[selectedImageIndex]})` }}
                 />
+                
+                {/* Image Gallery Thumbnails */}
                 <div className="p-6">
                   <div className="grid grid-cols-4 gap-3 mb-4">
                     {productImages.map((img, index) => (
@@ -219,7 +213,7 @@ export function ProductDetail() {
                     </span>
                     <span className="bg-blue-100 text-blue-800 px-4 py-2 rounded-full text-sm flex items-center gap-2">
                       <Star className="w-4 h-4 fill-blue-600" />
-                      {product.rating} / 5.0
+                      
                     </span>
                   </div>
                 </div>
@@ -287,7 +281,7 @@ export function ProductDetail() {
               <div className="text-sm text-emerald-700 mb-2">{product.brand}</div>
               <h1 className="text-4xl mb-4 text-gray-900">{product.name}</h1>
 
-              {/* UC1.2 Cenário 3: Stock status */}
+              {/* Stock Status */}
               <div className="mb-4">
                 {product.stock > 0 ? (
                   <span className="inline-flex items-center gap-2 px-4 py-2 bg-green-100 text-green-800 rounded-lg">
@@ -296,7 +290,7 @@ export function ProductDetail() {
                   </span>
                 ) : (
                   <span className="inline-flex items-center gap-2 px-4 py-2 bg-red-100 text-red-800 rounded-lg">
-                    Esgotado
+                    Produto Esgotado
                   </span>
                 )}
               </div>
@@ -343,46 +337,11 @@ export function ProductDetail() {
                 )}
               </div>
 
-              {/* UC1.2 Cenário 2 (BR-02): Aviso de histórico técnico indisponível */}
-              {!hasServiceHistory && (
-                <div className="bg-amber-50 border border-amber-300 rounded-xl p-4 mb-6 flex items-start gap-3">
-                  <div>
-                    <p className="text-amber-800 font-medium">Histórico indisponível</p>
-                    <p className="text-amber-700 text-sm mt-1">
-                      O histórico técnico deste produto não está disponível. Não é possível adicionar ao carrinho sem esta informação.
-                    </p>
-                  </div>
-                </div>
-              )}
-
-              {/* UC1.2 Cenário 1: Histórico de intervenções e peças substituídas */}
-              {hasServiceHistory && product.serviceHistory && (
-                <div className="bg-white rounded-xl p-6 mb-6 shadow-md">
-                  <h3 className="text-xl mb-4 text-gray-900">Histórico Técnico</h3>
-                  <div className="space-y-3">
-                    {product.serviceHistory.map((entry: { date: string; intervention: string; parts?: string[] }, index: number) => (
-                      <div key={index} className="border-l-2 border-emerald-400 pl-4">
-                        <p className="text-sm text-emerald-700 mb-1">
-                          {new Date(entry.date).toLocaleDateString("pt-PT", { year: "numeric", month: "long" })}
-                        </p>
-                        <p className="text-gray-900 text-sm">{entry.intervention}</p>
-                        {entry.parts && entry.parts.length > 0 && (
-                          <p className="text-gray-500 text-xs mt-1">
-                            Peças substituídas: {entry.parts.join(", ")}
-                          </p>
-                        )}
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
-
               {/* Warranty Selection */}
               <div className="bg-white rounded-xl p-6 mb-6 shadow-md">
                 <h3 className="text-xl mb-4 text-gray-900">Garantia</h3>
                 <div className="space-y-3">
-                  <label
-                    className="flex items-center gap-3 cursor-pointer p-4 border-2 rounded-lg transition-colors hover:border-emerald-300"
+                  <label className="flex items-center gap-3 cursor-pointer p-4 border-2 rounded-lg transition-colors hover:border-emerald-300"
                     style={{
                       borderColor: selectedWarranty === "24" ? "rgb(5 150 105)" : "rgb(229 231 235)",
                       backgroundColor: selectedWarranty === "24" ? "rgb(240 253 250)" : "white",
@@ -401,12 +360,13 @@ export function ProductDetail() {
                         <span className="text-gray-900">Garantia de 24 meses</span>
                         <span className="text-emerald-700">Incluída</span>
                       </div>
-                      <p className="text-sm text-gray-600 mt-1">Garantia padrão LOOP de 2 anos</p>
+                      <p className="text-sm text-gray-600 mt-1">
+                        Garantia padrão LOOP de 2 anos
+                      </p>
                     </div>
                   </label>
 
-                  <label
-                    className="flex items-center gap-3 cursor-pointer p-4 border-2 rounded-lg transition-colors hover:border-emerald-300"
+                  <label className="flex items-center gap-3 cursor-pointer p-4 border-2 rounded-lg transition-colors hover:border-emerald-300"
                     style={{
                       borderColor: selectedWarranty === "36" ? "rgb(5 150 105)" : "rgb(229 231 235)",
                       backgroundColor: selectedWarranty === "36" ? "rgb(240 253 250)" : "white",
@@ -425,16 +385,17 @@ export function ProductDetail() {
                         <span className="text-gray-900">Garantia de 36 meses</span>
                         <span className="text-emerald-700">+€49</span>
                       </div>
-                      <p className="text-sm text-gray-600 mt-1">Garantia estendida de 3 anos</p>
+                      <p className="text-sm text-gray-600 mt-1">
+                        Garantia estendida de 3 anos
+                      </p>
                     </div>
                   </label>
                 </div>
               </div>
 
               {/* Action Buttons */}
-              {/* UC1.2 Cenário 2 (BR-02) + Cenário 3: botão desativado sem histórico ou sem stock */}
               <div className="flex gap-4 mb-6">
-                {canAddToCart ? (
+                {product.stock > 0 ? (
                   <button
                     onClick={handleAddToCart}
                     className="flex-1 bg-emerald-600 text-white py-4 rounded-lg hover:bg-emerald-700 transition-colors text-lg"
@@ -444,14 +405,9 @@ export function ProductDetail() {
                 ) : (
                   <button
                     disabled
-                    title={
-                      !hasServiceHistory
-                        ? "Histórico técnico indisponível"
-                        : "Produto esgotado"
-                    }
                     className="flex-1 bg-gray-300 text-gray-500 py-4 rounded-lg cursor-not-allowed text-lg"
                   >
-                    {product.stock === 0 ? "Produto Esgotado" : "Indisponível para compra"}
+                    Produto Esgotado
                   </button>
                 )}
                 <button
@@ -468,58 +424,19 @@ export function ProductDetail() {
                 </button>
               </div>
 
+              {/* Total Price */}
               {selectedWarranty === "36" && (
                 <div className="bg-emerald-50 border border-emerald-200 rounded-xl p-4">
                   <div className="flex items-center justify-between">
                     <span className="text-gray-700">Total com garantia estendida:</span>
-                    <span className="text-2xl text-emerald-700">€{product.price + 49}</span>
+                    <span className="text-2xl text-emerald-700">
+                      €{product.price + 49}
+                    </span>
                   </div>
                 </div>
               )}
             </motion.div>
           </div>
-
-          {/* UC1.2 Cenário 3: Produtos similares quando esgotado */}
-          {product.stock === 0 && similarProducts.length > 0 && (
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.3 }}
-              className="mt-12"
-            >
-              <div className="bg-white rounded-2xl shadow-lg p-8">
-                <h2 className="text-2xl text-gray-900 mb-2">Produtos Similares Disponíveis</h2>
-                <p className="text-gray-600 mb-6">
-                  Este produto está esgotado. Veja outras opções da mesma categoria:
-                </p>
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
-                  {similarProducts.map((similar) => (
-                    <div
-                      key={similar.id}
-                      onClick={() => navigate(`/produto/${similar.id}`)}
-                      className="group bg-gray-50 rounded-xl overflow-hidden cursor-pointer hover:shadow-md transition-all border border-gray-100"
-                    >
-                      <div
-                        className="h-40 bg-cover bg-center transition-transform duration-300 group-hover:scale-105"
-                        style={{ backgroundImage: `url(${similar.image})` }}
-                      />
-                      <div className="p-4">
-                        <p className="text-xs text-emerald-700 mb-1">{similar.brand}</p>
-                        <p className="text-gray-900 mb-2 text-sm">{similar.name}</p>
-                        <div className="flex items-center justify-between">
-                          <span className="text-emerald-700">€{similar.price}</span>
-                          <span className="text-xs bg-emerald-100 text-emerald-800 px-2 py-1 rounded-full flex items-center gap-1">
-                            <Shield className="w-3 h-3" />
-                            {similar.condition}
-                          </span>
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </motion.div>
-          )}
 
           {/* Product Lifecycle Timeline */}
           <motion.div
@@ -537,6 +454,7 @@ export function ProductDetail() {
               </p>
 
               <div className="relative">
+                {/* Timeline Line */}
                 <div className="absolute left-8 md:left-1/2 top-0 bottom-0 w-0.5 bg-gradient-to-b from-emerald-600 to-teal-600 transform md:-translate-x-1/2" />
 
                 <div className="space-y-12">
@@ -551,6 +469,7 @@ export function ProductDetail() {
                         index % 2 === 0 ? "md:flex-row" : "md:flex-row-reverse"
                       } flex-row`}
                     >
+                      {/* Content */}
                       <div className={`flex-1 ${index % 2 === 0 ? "md:pr-12 md:text-right" : "md:pl-12"} pl-20 md:pl-0`}>
                         <div className="bg-gradient-to-br from-emerald-50 to-teal-50 p-6 rounded-xl border border-emerald-100">
                           <div className="text-2xl mb-2">{step.icon}</div>
@@ -560,10 +479,12 @@ export function ProductDetail() {
                         </div>
                       </div>
 
+                      {/* Timeline Dot */}
                       <div className="absolute left-8 md:left-1/2 w-16 h-16 md:transform md:-translate-x-1/2 bg-emerald-600 rounded-full border-4 border-white shadow-lg flex items-center justify-center z-10">
                         <span className="text-white text-xl">{step.icon}</span>
                       </div>
 
+                      {/* Spacer for alternating layout */}
                       <div className="hidden md:block flex-1" />
                     </motion.div>
                   ))}
