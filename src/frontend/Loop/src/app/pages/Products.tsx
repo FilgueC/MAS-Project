@@ -34,12 +34,12 @@ export function Products() {
   }, [categoryFromUrl]);
 
   const categories = [
-    { id: "Todos", name: "Todos"},
-    { id: "Telemóvel", name: "Telemóveis"},
+    { id: "Todos", name: "Todos" },
+    { id: "Telemóvel", name: "Telemóveis" },
     { id: "Computador", name: "Computadores" },
-    { id: "Tablet", name: "Tablets"},
-    { id: "Auscultadores", name: "Auscultadores"},
-    { id: "Colunas", name: "Colunas"},
+    { id: "Tablet", name: "Tablets" },
+    { id: "Auscultadores", name: "Auscultadores" },
+    { id: "Colunas", name: "Colunas" },
     { id: "Acessórios", name: "Acessórios" }
   ];
 
@@ -237,7 +237,7 @@ export function Products() {
                       : "bg-white text-gray-700 hover:bg-gray-100"
                   }`}
                 >
-                  {category} {category.name}
+                  {category.name}
                 </button>
               ))}
             </div>
@@ -369,7 +369,6 @@ export function Products() {
                       <div className="flex flex-wrap gap-2">
                         {selectedCategory !== "Todos" && (
                           <span className="inline-flex items-center gap-2 bg-emerald-100 text-emerald-700 px-3 py-1 rounded-full text-sm">
-                            {categories.find(c => c.id === selectedCategory)?.icon}{" "}
                             {categories.find(c => c.id === selectedCategory)?.name}
                             <button onClick={() => handleCategorySelect("Todos")} className="hover:bg-emerald-200 rounded-full p-0.5 transition-colors">
                               <X className="w-3 h-3" />
