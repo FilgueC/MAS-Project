@@ -24,7 +24,7 @@ interface ShippingLabel {
 
 export function Cart() {
   const { cart, removeFromCart, updateQuantity, updateWarranty, getCartTotal, clearCart } = useCart();
-  const { user } = useAuth();
+  const { user, addOrder } = useAuth();
   const navigate = useNavigate();
   const [showCheckout, setShowCheckout] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
@@ -123,6 +123,22 @@ export function Cart() {
   };
 
   const handleFinalConfirm = () => {
+    // Save order to user's order history
+    const newOrder = {
+      id: generatedLabel!.trackingNumber,
+      date: new Date().toISOString(),
+      status: "Em Processamento" as const,
+      total: total,
+      items: cart.map((item) => ({
+        id: String(item.id),
+        name: item.name,
+        quantity: item.quantity,
+        price: item.price + item.warrantyPrice,
+        image: item.image,
+      })),
+    };
+    addOrder(newOrder);
+
     clearCart();
     setShowCheckout(false);
     setAppliedCoupon(null);
@@ -148,6 +164,12 @@ export function Cart() {
             <ShoppingBag className="w-24 h-24 mx-auto mb-6 text-gray-300" />
             <h1 className="text-3xl mb-4 text-gray-900">O seu carrinho está vazio</h1>
             <p className="text-gray-600 mb-8">Adicione produtos ao carrinho para continuar</p>
+            <button
+              onClick={() => navigate("/produtos")}
+              className="bg-emerald-600 text-white px-8 py-3 rounded-lg hover:bg-emerald-700 transition-colors"
+            >
+              Explorar Produtos
+            </button>
           </div>
         </main>
         <Footer />
