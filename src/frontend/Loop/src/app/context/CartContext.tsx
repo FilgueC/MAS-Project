@@ -1,4 +1,5 @@
 import { createContext, useContext, useState, useEffect, ReactNode } from "react";
+import { useStock } from "./StockContext";
 
 export interface CartItem {
   id: number;
@@ -26,6 +27,7 @@ const CartContext = createContext<CartContextType | undefined>(undefined);
 
 export function CartProvider({ children }: { children: ReactNode }) {
   const [cart, setCart] = useState<CartItem[]>([]);
+  const { reserveStock, releaseStock } = useStock();
 
   // Load cart from localStorage on mount
   useEffect(() => {
@@ -41,9 +43,12 @@ export function CartProvider({ children }: { children: ReactNode }) {
   }, [cart]);
 
   const addToCart = (item: Omit<CartItem, "quantity" | "warranty" | "warrantyPrice">, warranty: "24" | "36" = "24") => {
+    // Reserva 1 unidade de stock
+    reserveStock(item.id, 1);
+
     setCart((prevCart) => {
       const existingItem = prevCart.find((cartItem) => cartItem.id === item.id && cartItem.warranty === warranty);
-      
+
       if (existingItem) {
         return prevCart.map((cartItem) =>
           cartItem.id === item.id && cartItem.warranty === warranty
@@ -51,7 +56,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
             : cartItem
         );
       }
-      
+
       return [
         ...prevCart,
         {
@@ -65,7 +70,14 @@ export function CartProvider({ children }: { children: ReactNode }) {
   };
 
   const removeFromCart = (id: number) => {
-    setCart((prevCart) => prevCart.filter((item) => item.id !== id));
+    setCart((prevCart) => {
+      const item = prevCart.find((cartItem) => cartItem.id === id);
+      if (item) {
+        // Liberta todas as unidades reservadas deste produto
+        releaseStock(id, item.quantity);
+      }
+      return prevCart.filter((cartItem) => cartItem.id !== id);
+    });
   };
 
   const updateQuantity = (id: number, quantity: number) => {
@@ -73,18 +85,27 @@ export function CartProvider({ children }: { children: ReactNode }) {
       removeFromCart(id);
       return;
     }
-    
-    setCart((prevCart) =>
-      prevCart.map((item) =>
-        item.id === id ? { ...item, quantity } : item
-      )
-    );
+
+    setCart((prevCart) => {
+      const item = prevCart.find((cartItem) => cartItem.id === id);
+      if (item) {
+        const diff = quantity - item.quantity;
+        if (diff > 0) {
+          reserveStock(id, diff);   // adicionou mais unidades → reserva
+        } else if (diff < 0) {
+          releaseStock(id, -diff);  // reduziu unidades → liberta
+        }
+      }
+      return prevCart.map((cartItem) =>
+        cartItem.id === id ? { ...cartItem, quantity } : cartItem
+      );
+    });
   };
 
   const updateWarranty = (id: number, warranty: "24" | "36") => {
     setCart((prevCart) =>
       prevCart.map((item) =>
-        item.id === id 
+        item.id === id
           ? { ...item, warranty, warrantyPrice: warranty === "36" ? 49 : 0 }
           : item
       )
@@ -92,7 +113,11 @@ export function CartProvider({ children }: { children: ReactNode }) {
   };
 
   const clearCart = () => {
-    setCart([]);
+    // Liberta todo o stock reservado ao limpar o carrinho
+    setCart((prevCart) => {
+      prevCart.forEach((item) => releaseStock(item.id, item.quantity));
+      return [];
+    });
   };
 
   const getCartTotal = () => {

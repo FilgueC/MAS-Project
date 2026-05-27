@@ -6,6 +6,7 @@ import { motion, AnimatePresence } from "motion/react";
 import { products } from "../data/products";
 import { useAuth } from "../context/AuthContext";
 import { useCart } from "../context/CartContext";
+import { useStock } from "../context/StockContext";
 import { useNavigate, useSearchParams } from "react-router";
 import { toast } from "sonner";
 
@@ -26,6 +27,7 @@ export function Products() {
   const [isLoading, setIsLoading] = useState(false);
   const { user, addToFavorites, removeFromFavorites, isFavorite } = useAuth();
   const { addToCart } = useCart();
+  const { getEffectiveStock } = useStock();
 
   useEffect(() => {
     if (categoryFromUrl) {
@@ -463,8 +465,8 @@ export function Products() {
                   <div className="flex items-center gap-2 mb-4">
                     <span className="text-sm text-gray-600">Garantia 24 meses</span>
                     <span className="text-sm text-gray-400">•</span>
-                    <span className={`text-sm ${product.stock > 0 ? "text-green-600" : "text-red-600"}`}>
-                      {product.stock > 0 ? `${product.stock} em stock` : "Esgotado"}
+                    <span className={`text-sm ${getEffectiveStock(product.id, product.stock) > 0 ? "text-green-600" : "text-red-600"}`}>
+                      {getEffectiveStock(product.id, product.stock) > 0 ? `${getEffectiveStock(product.id, product.stock)} em stock` : "Esgotado"}
                     </span>
                   </div>
 
@@ -474,7 +476,7 @@ export function Products() {
                   </div>
 
                   {/* CTA Button */}
-                  {product.stock > 0 ? (
+                  {getEffectiveStock(product.id, product.stock) > 0 ? (
                     <button
                       onClick={(e) => handleAddToCart(product, e)}
                       className="w-full bg-emerald-600 text-white py-3 rounded-lg hover:bg-emerald-700 transition-colors"

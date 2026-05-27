@@ -6,6 +6,7 @@ import { Star, Shield, Check, Heart, ChevronLeft, Leaf, Droplet, Zap, Trash2, Me
 import { useState } from "react";
 import { useCart } from "../context/CartContext";
 import { useAuth } from "../context/AuthContext";
+import { useStock } from "../context/StockContext";
 import { motion } from "motion/react";
 import { toast } from "sonner";
 
@@ -22,6 +23,7 @@ export function ProductDetail() {
   const navigate = useNavigate();
   const { addToCart } = useCart();
   const { user, addToFavorites, removeFromFavorites, isFavorite } = useAuth();
+  const { getEffectiveStock } = useStock();
   const [selectedWarranty, setSelectedWarranty] = useState<"24" | "36">("24");
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
   const [reviewComment, setReviewComment] = useState("");
@@ -283,10 +285,10 @@ export function ProductDetail() {
 
               {/* Stock Status */}
               <div className="mb-4">
-                {product.stock > 0 ? (
+                {getEffectiveStock(product.id, product.stock) > 0 ? (
                   <span className="inline-flex items-center gap-2 px-4 py-2 bg-green-100 text-green-800 rounded-lg">
                     <Check className="w-4 h-4" />
-                    {product.stock} unidades em stock
+                    {getEffectiveStock(product.id, product.stock)} unidades em stock
                   </span>
                 ) : (
                   <span className="inline-flex items-center gap-2 px-4 py-2 bg-red-100 text-red-800 rounded-lg">
@@ -395,7 +397,7 @@ export function ProductDetail() {
 
               {/* Action Buttons */}
               <div className="flex gap-4 mb-6">
-                {product.stock > 0 ? (
+                {getEffectiveStock(product.id, product.stock) > 0 ? (
                   <button
                     onClick={handleAddToCart}
                     className="flex-1 bg-emerald-600 text-white py-4 rounded-lg hover:bg-emerald-700 transition-colors text-lg"
