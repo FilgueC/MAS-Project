@@ -81,23 +81,6 @@ export function Login() {
                 {isLogin ? "Bem-vindo de volta à LOOP" : "Junte-se à LOOP"}
               </p>
             </div>
-
-            {/* Demo Account Info */}
-            {isLogin && (
-              <div className="mb-6 p-4 bg-emerald-50 border border-emerald-200 rounded-lg">
-                <p className="text-sm text-emerald-800 mb-2">
-                  <strong>Conta de demonstração:</strong>
-                </p>
-                <p className="text-sm text-emerald-700">
-                  Email: <strong>john@loop.pt</strong>
-                </p>
-                <p className="text-sm text-emerald-700">
-                  Password: <strong>loop2024</strong>
-                </p>
-                
-              </div>
-            )}
-
             {error && (
               <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg">
                 <p className="text-sm text-red-800">{error}</p>
