@@ -21,10 +21,10 @@ export interface Product {
   description?: string;
   stock: number; // Available quantity
   timeline: {
-    manufactured: string;
-    firstUse: string;
-    receivedForRefurbishment: string;
-    qualityTested: string;
+    manufactured?: string;
+    firstUse?: string;
+    receivedForRefurbishment?: string;
+    qualityTested?: string;
   };
   specs?: string[];
   ecoImpact?: {
@@ -610,6 +610,31 @@ export const products: Product[] = [
       waterSaved: 15,
       energySaved: 0.5,
       wastePrevented: 0.1,
+    },
+  },
+  {
+    id: 24,
+    name: "Samsung Galaxy A54",
+    category: "Telemóvel",
+    brand: "Samsung",
+    price: 279,
+    image: "https://images.unsplash.com/photo-1681651585822-b2edab241341?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxTYW1zdW5nJTIwR2FsYXh5JTIwUzIzJTIwcGhvbmV8ZW58MXx8fHwxNzczMjU5MTg0fDA&ixlib=rb-4.1.0&q=80&w=1080",
+    condition: "Muito Bom",
+    storage: "128GB",
+    color: "Preto",
+    stock: 4,
+    // US2 Cenário 2: timeline incompleto → histórico técnico indisponível (BR-02)
+    timeline: {
+      manufactured: "2023-03-01",
+      firstUse: "2023-04-01",
+      // receivedForRefurbishment e qualityTested em falta propositadamente
+    },
+    specs: ["Exynos 1380", "50MP Wide camera", "5000mAh battery"],
+    ecoImpact: {
+      co2Saved: 7,
+      waterSaved: 35,
+      energySaved: 1.5,
+      wastePrevented: 0.3,
     },
   },
 ];

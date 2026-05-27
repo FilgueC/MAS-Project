@@ -24,7 +24,37 @@ export function Products() {
   const [maxPrice, setMaxPrice] = useState<number | "">("");
   // UC1.1 Cenário 3: estado de erro de comunicação com servidor
   const [serverError, setServerError] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+  const [retryCount, setRetryCount] = useState(0);
+
+  // Simula carregamento do catálogo a partir de um servidor.
+  // Em produção substituir o Promise interno por um fetch() real à API.
+  useEffect(() => {
+    let cancelled = false;
+    setIsLoading(true);
+    setServerError(false);
+
+    const loadProducts = async () => {
+      try {
+        await new Promise<void>((resolve, _reject) => {
+          setTimeout(() => {
+            // Para testar o Cenário 3, substitui resolve() por:
+            // _reject(new Error("Network error"))
+            resolve();
+          }, 600);
+        });
+        if (!cancelled) setIsLoading(false);
+      } catch {
+        if (!cancelled) {
+          setServerError(true);
+          setIsLoading(false);
+        }
+      }
+    };
+
+    loadProducts();
+    return () => { cancelled = true; };
+  }, [retryCount]);
   const { user, addToFavorites, removeFromFavorites, isFavorite } = useAuth();
   const { addToCart } = useCart();
   const { getEffectiveStock } = useStock();
@@ -124,11 +154,7 @@ export function Products() {
   };
 
   const handleRetry = () => {
-    setServerError(false);
-    setIsLoading(true);
-    setTimeout(() => {
-      setIsLoading(false);
-    }, 1000);
+    setRetryCount(prev => prev + 1); // re-aciona o useEffect
   };
 
   const activeFiltersCount = selectedBrands.length + selectedStorages.length + selectedConditions.length +
@@ -171,6 +197,23 @@ export function Products() {
       toast.success("Produto adicionado ao carrinho!");
     }
   };
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-gray-50">
+        <Header />
+        <main className="pt-20">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-32 text-center">
+            <div className="bg-white rounded-2xl shadow-md p-12 max-w-md mx-auto">
+              <RefreshCw className="w-12 h-12 text-emerald-500 mx-auto mb-4 animate-spin" />
+              <p className="text-gray-600">A carregar o catálogo...</p>
+            </div>
+          </div>
+        </main>
+        <Footer />
+      </div>
+    );
+  }
 
   if (serverError) {
     return (

@@ -57,6 +57,14 @@ export function ProductDetail() {
   // Calcula o stock disponível subtraindo o que já está reservado no carrinho
   const effectiveStock = getEffectiveStock(product.id, product.stock);
 
+  // US2 Cenário 2 (BR-02): histórico técnico só está completo se os 4 campos do
+  // timeline estiverem preenchidos. Se algum faltar, o botão fica bloqueado.
+  const hasCompleteTimeline =
+    !!product.timeline.manufactured &&
+    !!product.timeline.firstUse &&
+    !!product.timeline.receivedForRefurbishment &&
+    !!product.timeline.qualityTested;
+
   const handleAddToCart = () => {
     // addToCart agora devolve true se conseguir adicionar ou false se bater no limite do stock
     const success = addToCart(
@@ -232,7 +240,7 @@ export function ProductDetail() {
 
             {/* Action Buttons */}
             <div className="flex gap-4">
-              {effectiveStock > 0 ? (
+              {effectiveStock > 0 && hasCompleteTimeline ? (
                 <button
                   onClick={handleAddToCart}
                   className="flex-1 bg-emerald-600 text-white py-4 rounded-xl hover:bg-emerald-700 font-semibold transition-colors shadow-sm"
@@ -244,7 +252,7 @@ export function ProductDetail() {
                   disabled
                   className="flex-1 bg-gray-200 text-gray-400 py-4 rounded-xl font-semibold cursor-not-allowed"
                 >
-                  Produto Esgotado
+                  {effectiveStock === 0 ? "Produto Esgotado" : "Indisponível para Compra"}
                 </button>
               )}
               <button
@@ -258,6 +266,20 @@ export function ProductDetail() {
                 <Heart className={`w-6 h-6 ${isFavorite(product.id) ? "fill-current" : ""}`} />
               </button>
             </div>
+
+            {/* US2 Cenário 2 (BR-02): aviso de histórico técnico indisponível */}
+            {!hasCompleteTimeline && (
+              <div className="mt-4 bg-amber-50 border border-amber-200 rounded-xl p-4 flex items-start gap-3">
+                <span className="text-amber-500 text-xl mt-0.5">⚠️</span>
+                <div>
+                  <p className="font-semibold text-amber-800">Histórico indisponível</p>
+                  <p className="text-amber-700 text-sm mt-1">
+                    O histórico técnico completo deste produto ainda não se encontra registado no sistema.
+                    Não é possível adicionar ao carrinho até que toda a informação de recondicionamento esteja disponível.
+                  </p>
+                </div>
+              </div>
+            )}
 
             {/* Quick Benefits Tags */}
             <div className="grid grid-cols-3 gap-2 mt-8 border-t border-gray-100 pt-6 text-center">
@@ -316,6 +338,36 @@ export function ProductDetail() {
             ))}
           </div>
         </div>
+
+        {/* US2 Cenário 3: produto esgotado → sugerir produtos similares */}
+        {effectiveStock === 0 && (() => {
+          const similar = products
+            .filter(p => p.id !== product.id && p.category === product.category && getEffectiveStock(p.id, p.stock) > 0)
+            .slice(0, 3);
+          if (similar.length === 0) return null;
+          return (
+            <div className="mb-12 bg-white rounded-2xl p-6 md:p-8 shadow-sm border border-gray-100">
+              <h2 className="text-2xl font-bold text-gray-900 mb-2">Produtos Similares Disponíveis</h2>
+              <p className="text-gray-600 mb-6">Este produto está esgotado. Veja alternativas da mesma categoria:</p>
+              <div className="grid sm:grid-cols-3 gap-6">
+                {similar.map(p => (
+                  <button
+                    key={p.id}
+                    onClick={() => navigate(`/produto/${p.id}`)}
+                    className="text-left bg-gray-50 rounded-xl overflow-hidden hover:shadow-md transition-shadow border border-gray-100"
+                  >
+                    <div className="h-40 bg-cover bg-center" style={{ backgroundImage: `url(${p.image})` }} />
+                    <div className="p-4">
+                      <div className="text-sm text-emerald-600 font-semibold mb-1">{p.brand}</div>
+                      <p className="font-medium text-gray-900 mb-2">{p.name}</p>
+                      <p className="text-emerald-700 font-bold">{p.price}€</p>
+                    </div>
+                  </button>
+                ))}
+              </div>
+            </div>
+          );
+        })()}
 
         {/* Reviews Section */}
         <div className="bg-white rounded-2xl p-6 md:p-8 shadow-sm border border-gray-100">
