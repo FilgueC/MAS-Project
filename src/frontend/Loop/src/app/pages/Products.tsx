@@ -159,14 +159,17 @@ export function Products() {
 
   const handleAddToCart = (product: typeof products[0], e: React.MouseEvent) => {
     e.stopPropagation();
-    addToCart({
+    const success = addToCart({
       id: product.id,
       name: product.name,
       price: product.price,
       image: product.image,
       category: product.category,
     });
-    toast.success("Produto adicionado ao carrinho!");
+  
+    if (success) {
+      toast.success("Produto adicionado ao carrinho!");
+    }
   };
 
   if (serverError) {
