@@ -26,14 +26,12 @@ export function Products() {
   const [serverError, setServerError] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [retryCount, setRetryCount] = useState(0);
-
   // Simula carregamento do catálogo a partir de um servidor.
   // Em produção substituir o Promise interno por um fetch() real à API.
   useEffect(() => {
     let cancelled = false;
     setIsLoading(true);
     setServerError(false);
-
     const loadProducts = async () => {
       try {
         await new Promise<void>((resolve, _reject) => {
@@ -51,7 +49,6 @@ export function Products() {
         }
       }
     };
-
     loadProducts();
     return () => { cancelled = true; };
   }, [retryCount]);
@@ -105,6 +102,12 @@ export function Products() {
 
   // -----------------------------------------
 
+  const hasCompleteTimeline = (p: typeof products[0]) =>
+    !!p.timeline.manufactured &&
+    !!p.timeline.firstUse &&
+    !!p.timeline.receivedForRefurbishment &&
+    !!p.timeline.qualityTested;
+
   const filteredProducts = products.filter(p => {
     const categoryMatch = selectedCategory === "Todos" || p.category === selectedCategory;
     const brandMatch = selectedBrands.length === 0 || selectedBrands.includes(p.brand.trim());
@@ -154,7 +157,7 @@ export function Products() {
   };
 
   const handleRetry = () => {
-    setRetryCount(prev => prev + 1); // re-aciona o useEffect
+    setRetryCount(prev => prev + 1);
   };
 
   const activeFiltersCount = selectedBrands.length + selectedStorages.length + selectedConditions.length +
@@ -522,7 +525,7 @@ export function Products() {
                   </div>
 
                   {/* CTA Button */}
-                  {getEffectiveStock(product.id, product.stock) > 0 ? (
+                  {getEffectiveStock(product.id, product.stock) > 0 && hasCompleteTimeline(product) ? (
                     <button
                       onClick={(e) => handleAddToCart(product, e)}
                       className="w-full bg-emerald-600 text-white py-3 rounded-lg hover:bg-emerald-700 transition-colors"
@@ -533,8 +536,15 @@ export function Products() {
                     <button
                       disabled
                       className="w-full bg-gray-300 text-gray-500 py-3 rounded-lg cursor-not-allowed"
+                      title={
+                        getEffectiveStock(product.id, product.stock) === 0
+                          ? "Produto esgotado"
+                          : "Histórico técnico incompleto"
+                      }
                     >
-                      Produto Esgotado
+                      {getEffectiveStock(product.id, product.stock) === 0
+                        ? "Produto Esgotado"
+                        : "Indisponível para Compra"}
                     </button>
                   )}
                 </div>

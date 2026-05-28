@@ -627,6 +627,7 @@ export const products: Product[] = [
     timeline: {
       manufactured: "2023-03-01",
       firstUse: "2023-04-01",
+      //receivedForRefurbishment: "2023-05-01",
       // receivedForRefurbishment e qualityTested em falta propositadamente
     },
     specs: ["Exynos 1380", "50MP Wide camera", "5000mAh battery"],
