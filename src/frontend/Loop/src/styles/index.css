@@ -1,5 +1,4 @@
-@import './fonts.css';
-@import './tailwind.css';
+@import "tailwindcss";
 @import './theme.css';
 @import 'slick-carousel/slick/slick.css';
 @import 'slick-carousel/slick/slick-theme.css';

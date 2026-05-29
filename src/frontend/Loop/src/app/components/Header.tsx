@@ -3,7 +3,7 @@ import { ShoppingCart, Menu, X, User, LogOut } from "lucide-react";
 import { useState } from "react";
 import { useAuth } from "../context/AuthContext";
 import { useCart } from "../context/CartContext";
-import logoImage from "figma:asset/7dd3bcd6b3ac8acf1406c32cfc67a42f9934c484.png";
+import logoImage from "../../Imagens/Logo.png";
 
 export function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
