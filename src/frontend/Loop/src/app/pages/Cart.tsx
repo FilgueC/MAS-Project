@@ -707,55 +707,8 @@ export function Cart() {
                 <h2 className="text-2xl mb-6 text-gray-900">Resumo</h2>
 
                 <div className="space-y-4 mb-6">
-                  {/* Coupon Section */}
-                  <div className="border-b border-gray-200 pb-4">
-                    {!appliedCoupon ? (
-                      <div>
-                        <label className="block text-sm text-gray-700 mb-2">Cupão de Desconto</label>
-                        <div className="flex gap-2">
-                          <div className="relative flex-1">
-                            <Tag className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
-                            <input
-                              type="text"
-                              placeholder="Código do cupão"
-                              value={couponCode}
-                              onChange={(e) => {
-                                setCouponCode(e.target.value.toUpperCase());
-                                setCouponError("");
-                              }}
-                              className="w-full pl-9 pr-3 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-emerald-500 text-sm"
-                            />
-                          </div>
-                          <button
-                            onClick={handleApplyCoupon}
-                            disabled={!couponCode}
-                            className="px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed text-sm"
-                          >
-                            Aplicar
-                          </button>
-                        </div>
-                        {couponError && <p className="text-xs text-red-600 mt-1">{couponError}</p>}
-                      </div>
-                    ) : (
-                      <div className="bg-emerald-50 border border-emerald-200 rounded-lg p-3">
-                        <div className="flex items-center justify-between">
-                          <div className="flex items-center gap-2">
-                            <Tag className="w-4 h-4 text-emerald-700" />
-                            <div>
-                              <p className="text-sm text-emerald-900">Cupão <strong>{appliedCoupon.code}</strong></p>
-                              <p className="text-xs text-emerald-700">{appliedCoupon.description}</p>
-                            </div>
-                          </div>
-                          <button onClick={handleRemoveCoupon} className="text-emerald-700 hover:text-emerald-800">
-                            <X className="w-4 h-4" />
-                          </button>
-                        </div>
-                      </div>
-                    )}
-                  </div>
-
                   <div className="flex justify-between text-gray-600">
-                    <span>Subtotal ({cart.reduce((sum, item) => sum + item.quantity, 0)} itens)</span>
+                    <span>Total ({cart.reduce((sum, item) => sum + item.quantity, 0)} itens)</span>
                     <span>€{subtotal.toFixed(2)}</span>
                   </div>
 
@@ -820,7 +773,7 @@ export function Cart() {
                     </div>
                     <div className="flex items-center gap-2">
                       <div className="w-8 h-8 bg-emerald-100 rounded-full flex items-center justify-center">✓</div>
-                      <span>Devolução grátis em 30 dias</span>
+                      <span>Devolução grátis até 30 dias</span>
                     </div>
                     <div className="flex items-center gap-2">
                       <div className="w-8 h-8 bg-emerald-100 rounded-full flex items-center justify-center">🔒</div>

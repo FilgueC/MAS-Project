@@ -24,6 +24,46 @@ export interface Product {
     manufactured?: string;
     firstUse?: string;
     receivedForRefurbishment?: string;
+    replacedParts: string[];
+    qualityTested?: string;
+  };
+  specs?: string[];
+  ecoImpact?: {
+    co2Saved: number; // in kg
+    waterSaved: number; // in liters
+    energySaved: number; // in kWh
+    wastePrevented: number; // in kg
+  };
+  reviews?: ProductReview[];
+}
+
+export interface ProductReview {
+  id: string;
+  userId: string;
+  userName: string;
+  comment: string;
+  date: string;
+  verified: boolean;
+}
+
+export interface Product {
+  id: number;
+  name: string;
+  category: "Telemóvel" | "Computador" | "Tablet" | "Auscultadores" | "Colunas" | "Acessórios";
+  brand: string;
+  price: number;
+  image: string;
+  images?: string[]; // Multiple product images
+  condition: "Como Novo" | "Excelente" | "Muito Bom";
+  storage?: string;
+  color?: string;
+  description?: string;
+  stock: number; // Available quantity
+  timeline: {
+    manufactured?: string;
+    firstUse?: string;
+    receivedForRefurbishment?: string;
+    replacedParts: string[]; // Adicionado estrategicamente aqui para o histórico técnico
     qualityTested?: string;
   };
   specs?: string[];
@@ -53,6 +93,7 @@ export const products: Product[] = [
       manufactured: "2022-09-12",
       firstUse: "2022-10-01",
       receivedForRefurbishment: "2023-01-15",
+      replacedParts: ["Bateria Nova Original OEM", "Ecrã Super Retina XDR"], // Peças para o cenário 1 do iPhone 13
       qualityTested: "2023-01-20",
     },
     specs: ["A15 Bionic chip", "12MP Ultra Wide camera", "12MP Wide camera", "12MP Telephoto camera"],
@@ -78,6 +119,7 @@ export const products: Product[] = [
       manufactured: "2020-10-23",
       firstUse: "2020-11-01",
       receivedForRefurbishment: "2023-02-10",
+      replacedParts: ["Bateria de Alta Capacidade Certificada"],
       qualityTested: "2023-02-15",
     },
     specs: ["A14 Bionic chip", "12MP Ultra Wide camera", "12MP Wide camera"],
@@ -103,6 +145,7 @@ export const products: Product[] = [
       manufactured: "2023-03-01",
       firstUse: "2023-03-15",
       receivedForRefurbishment: "2023-04-10",
+      replacedParts: ["Módulo da Câmara Traseira (Foco Principal)"],
       qualityTested: "2023-04-15",
     },
     specs: ["Snapdragon 8 Gen 2", "50MP Wide camera", "12MP Ultra Wide camera", "10MP Telephoto camera"],
@@ -128,6 +171,7 @@ export const products: Product[] = [
       manufactured: "2022-10-06",
       firstUse: "2022-10-15",
       receivedForRefurbishment: "2023-05-05",
+      replacedParts: [], // Nenhum componente substituído
       qualityTested: "2023-05-10",
     },
     specs: ["Tensor G2 chip", "50MP Wide camera", "12MP Ultra Wide camera", "10MP Telephoto camera"],
@@ -155,6 +199,7 @@ export const products: Product[] = [
       manufactured: "2023-01-10",
       firstUse: "2023-01-20",
       receivedForRefurbishment: "2023-06-05",
+      replacedParts: ["Teclado Layout PT", "Pasta Térmica de Prata"],
       qualityTested: "2023-06-10",
     },
     specs: ["M2 Pro chip", "16GB RAM", "512GB "],
@@ -180,6 +225,7 @@ export const products: Product[] = [
       manufactured: "2022-11-01",
       firstUse: "2022-11-15",
       receivedForRefurbishment: "2023-07-05",
+      replacedParts: [],
       qualityTested: "2023-07-10",
     },
     specs: ["12th Gen Intel Core i7", "16GB RAM", "1TB "],
@@ -205,6 +251,7 @@ export const products: Product[] = [
       manufactured: "2022-12-01",
       firstUse: "2022-12-15",
       receivedForRefurbishment: "2023-08-05",
+      replacedParts: ["Módulo Trackpad de Gestos"],
       qualityTested: "2023-08-10",
     },
     specs: ["12th Gen Intel Core i5", "8GB RAM", "512GB "],
@@ -230,6 +277,7 @@ export const products: Product[] = [
       manufactured: "2023-01-05",
       firstUse: "2023-01-15",
       receivedForRefurbishment: "2023-09-05",
+      replacedParts: ["Bateria Primária de Polímeros de Lítio"],
       qualityTested: "2023-09-10",
     },
     specs: ["12th Gen Intel Core i7", "16GB RAM", "256GB "],
@@ -257,6 +305,7 @@ export const products: Product[] = [
       manufactured: "2022-09-15",
       firstUse: "2022-09-25",
       receivedForRefurbishment: "2023-10-05",
+      replacedParts: [],
       qualityTested: "2023-10-10",
     },
     specs: ["M1 chip", "12MP Ultra Wide camera", "12MP Wide camera"],
@@ -282,6 +331,7 @@ export const products: Product[] = [
       manufactured: "2022-10-01",
       firstUse: "2022-10-15",
       receivedForRefurbishment: "2023-11-05",
+      replacedParts: ["Conector Dock USB-C de Carregamento"],
       qualityTested: "2023-11-10",
     },
     specs: ["M1 chip", "12MP Ultra Wide camera", "12MP Wide camera"],
@@ -307,6 +357,7 @@ export const products: Product[] = [
       manufactured: "2023-01-01",
       firstUse: "2023-01-15",
       receivedForRefurbishment: "2023-12-05",
+      replacedParts: [],
       qualityTested: "2023-12-10",
     },
     specs: ["Snapdragon 8 Gen 2", "50MP Wide camera", "12MP Ultra Wide camera", "10MP Telephoto camera"],
@@ -332,6 +383,7 @@ export const products: Product[] = [
       manufactured: "2022-11-01",
       firstUse: "2022-11-15",
       receivedForRefurbishment: "2024-01-05",
+      replacedParts: ["Vidro do Ecrã Touch Digitizer"],
       qualityTested: "2024-01-10",
     },
     specs: ["12th Gen Intel Core i7", "16GB RAM", "256GB "],
@@ -358,6 +410,7 @@ export const products: Product[] = [
       manufactured: "2022-09-01",
       firstUse: "2022-09-15",
       receivedForRefurbishment: "2024-02-05",
+      replacedParts: ["Almofadas de Isolamento Acústico"],
       qualityTested: "2024-02-10",
     },
     specs: ["Noise cancellation", "30 hours battery life"],
@@ -382,6 +435,7 @@ export const products: Product[] = [
       manufactured: "2022-10-01",
       firstUse: "2022-10-15",
       receivedForRefurbishment: "2024-03-05",
+      replacedParts: ["Ponteiras de Silicone Macias (S/M/L)"],
       qualityTested: "2024-03-10",
     },
     specs: ["Active noise cancellation", "24 hours battery life"],
@@ -406,6 +460,7 @@ export const products: Product[] = [
       manufactured: "2023-01-01",
       firstUse: "2023-01-15",
       receivedForRefurbishment: "2024-04-05",
+      replacedParts: [],
       qualityTested: "2024-04-10",
     },
     specs: ["Noise cancellation", "20 hours battery life"],
@@ -430,6 +485,7 @@ export const products: Product[] = [
       manufactured: "2022-11-01",
       firstUse: "2022-11-15",
       receivedForRefurbishment: "2024-05-05",
+      replacedParts: ["Banda de Tecido Superior do Arco"],
       qualityTested: "2024-05-10",
     },
     specs: ["Active noise cancellation", "20 hours battery life"],
@@ -456,6 +512,7 @@ export const products: Product[] = [
       manufactured: "2022-09-01",
       firstUse: "2022-09-15",
       receivedForRefurbishment: "2024-06-05",
+      replacedParts: [],
       qualityTested: "2024-06-10",
     },
     specs: ["Bluetooth 5.0", "12 hours battery life"],
@@ -480,6 +537,7 @@ export const products: Product[] = [
       manufactured: "2022-10-01",
       firstUse: "2022-10-15",
       receivedForRefurbishment: "2024-07-05",
+      replacedParts: ["Antena Recetora Wi-Fi Integrada"],
       qualityTested: "2024-07-10",
     },
     specs: ["Bluetooth 5.0", "16 hours battery life"],
@@ -504,6 +562,7 @@ export const products: Product[] = [
       manufactured: "2023-01-01",
       firstUse: "2023-01-15",
       receivedForRefurbishment: "2024-08-05",
+      replacedParts: [],
       qualityTested: "2024-08-10",
     },
     specs: ["Bluetooth 5.0", "12 hours battery life"],
@@ -528,6 +587,7 @@ export const products: Product[] = [
       manufactured: "2022-11-01",
       firstUse: "2022-11-15",
       receivedForRefurbishment: "2024-09-05",
+      replacedParts: ["Porta de Alimentação Micro-USB"],
       qualityTested: "2024-09-10",
     },
     specs: ["Bluetooth 5.0", "16 hours battery life"],
@@ -546,7 +606,7 @@ export const products: Product[] = [
     category: "Acessórios",
     brand: "Apple",
     price: 19,
-    image: "https://images.unsplash.com/photo-1760708825913-65a50b3dc39b?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxVU0ItQyUyMGNoYXJnaW5nJTIwY2FibGV8ZW58MXx8fHwxNzczMjU5MTg5fDA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral",
+    image: "https://images.unsplash.com/photo-1760708825913-65a50b3dc39b?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxVU0ItQyUyMGNoYXJnaW5nJTIwY2FibGV8ZW58MXx8fHwxNzczMjU5MTIXfDA&ixlib=rb-4.1.0&q=80&w=1080",
     condition: "Como Novo",
     color: "Branco",
     stock: 30,
@@ -554,6 +614,7 @@ export const products: Product[] = [
       manufactured: "2022-09-01",
       firstUse: "2022-09-15",
       receivedForRefurbishment: "2024-10-05",
+      replacedParts: [],
       qualityTested: "2024-10-10",
     },
     specs: ["USB-C to Lightning", "1 meter length"],
@@ -578,6 +639,7 @@ export const products: Product[] = [
       manufactured: "2023-01-01",
       firstUse: "2023-01-15",
       receivedForRefurbishment: "2024-12-05",
+      replacedParts: ["Borda Magnética de Alinhamento"],
       qualityTested: "2024-12-10",
     },
     specs: ["MagSafe wireless charger", "15W power"],
@@ -602,6 +664,7 @@ export const products: Product[] = [
       manufactured: "2022-11-01",
       firstUse: "2022-11-15",
       receivedForRefurbishment: "2025-01-05",
+      replacedParts: [],
       qualityTested: "2025-01-10",
     },
     specs: ["20000mAh battery", "USB-C charging"],
@@ -627,7 +690,7 @@ export const products: Product[] = [
     timeline: {
       manufactured: "2023-03-01",
       firstUse: "2023-04-01",
-      //receivedForRefurbishment: "2023-05-01",
+      replacedParts: [],
       // receivedForRefurbishment e qualityTested em falta propositadamente
     },
     specs: ["Exynos 1380", "50MP Wide camera", "5000mAh battery"],

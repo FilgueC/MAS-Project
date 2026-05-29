@@ -58,7 +58,7 @@ export function ProductDetail() {
   // Generate multiple product images for gallery
   const productImages = product.images || [
     product.image,
-    "https://images.unsplash.com/photo-1609085174749-243b6a90e6b6?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxpUGhvbmUlMjBzbWFydHBob25lJTIwY2xvc2UtdXB8ZW58MXx8fHwxNzczNDM2NDc3fDA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral",
+    "https://images.unsplash.com/photo-1609085174749-243b6a90e6b6?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxpUGhvbmUlMjBzbWFydHBob25lJTIwY2xvc2UtdXB|en|1|||1773436477|0&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral",
     "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR5wmSYsGGurcZU5vvWIQFJiLZMUasiNU_64Q&s",
     "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSpaG9K4SQ9uBUwSH1Jusl3L1AxRdrqsdSclw&s",
   ];
@@ -111,11 +111,14 @@ export function ProductDetail() {
     !!product.timeline.manufactured &&
     !!product.timeline.firstUse &&
     !!product.timeline.receivedForRefurbishment &&
+    !!product.timeline.replacedParts &&
     !!product.timeline.qualityTested;
 
   const formatDate = (dateStr?: string) => {
     if (!dateStr) return null;
     const date = new Date(dateStr);
+    // Se a string não for uma data válida (ex: "Ecrã, Bateria"), retorna o próprio texto
+    if (isNaN(date.getTime())) return dateStr;
     return date.toLocaleDateString("pt-PT", { year: "numeric", month: "long" });
   };
 
@@ -141,6 +144,16 @@ export function ProductDetail() {
       description: "Recebido na LOOP para recondicionamento",
       icon: "🔧",
     },
+    {
+      title: "Peças Substituídas",
+      // CORREÇÃO: Transforma o array ['Peça1', 'Peça2'] numa única string "Peça1, Peça2"
+      date: product.timeline.replacedParts && product.timeline.replacedParts.length > 0
+        ? product.timeline.replacedParts.join(", ")
+        : "Nenhuma peça substituída",
+      available: !!product.timeline.replacedParts,
+      description: "Peças substituídas durante o processo de recondicionamento",
+      icon: "🔧",
+    },  
     {
       title: "Testes de Qualidade",
       date: formatDate(product.timeline.qualityTested),
@@ -235,7 +248,6 @@ export function ProductDetail() {
                     </span>
                     <span className="bg-blue-100 text-blue-800 px-4 py-2 rounded-full text-sm flex items-center gap-2">
                       <Star className="w-4 h-4 fill-blue-600" />
-                      
                     </span>
                   </div>
                 </div>
@@ -433,19 +445,6 @@ export function ProductDetail() {
                   </button>
                 )}
 
-              {/* US2 Cenário 2 (BR-02): aviso de histórico técnico indisponível */}
-              {!hasCompleteTimeline && (
-                <div className="mt-4 bg-amber-50 border border-amber-200 rounded-xl p-4 flex items-start gap-3">
-                  <span className="text-amber-500 text-xl mt-0.5">⚠️</span>
-                  <div>
-                    <p className="font-semibold text-amber-800">Histórico indisponível</p>
-                    <p className="text-amber-700 text-sm mt-1">
-                      O histórico técnico completo deste produto ainda não se encontra registado no sistema.
-                      Não é possível adicionar ao carrinho até que toda a informação de recondicionamento esteja disponível.
-                    </p>
-                  </div>
-                </div>
-              )}
                 <button
                   onClick={handleFavoriteClick}
                   className="bg-white border-2 border-gray-200 p-4 rounded-lg hover:border-red-300 transition-colors"
@@ -459,6 +458,20 @@ export function ProductDetail() {
                   />
                 </button>
               </div>
+
+              {/* US2 Cenário 2 (BR-02): aviso de histórico técnico indisponível */}
+              {!hasCompleteTimeline && (
+                <div className="mt-4 bg-amber-50 border border-amber-200 rounded-xl p-4 flex items-start gap-3">
+                  <span className="text-amber-500 text-xl mt-0.5">⚠️</span>
+                  <div>
+                    <p className="font-semibold text-amber-800">Histórico indisponível</p>
+                    <p className="text-amber-700 text-sm mt-1">
+                      O histórico técnico completo deste produto ainda não se encontra registado no sistema.
+                      Não é possível adicionar ao carrinho até que toda a informação de recondicionamento esteja disponível.
+                    </p>
+                  </div>
+                </div>
+              )}
 
               {/* Total Price */}
               {selectedWarranty === "36" && (
@@ -538,35 +551,36 @@ export function ProductDetail() {
               </div>
             </div>
           </motion.div>
+
           {/* US2 Cenário 3: produto esgotado → sugerir produtos similares */}
-        {effectiveStock === 0 && (() => {
-          const similar = products
-            .filter(p => p.id !== product.id && p.category === product.category && getEffectiveStock(p.id, p.stock) > 0)
-            .slice(0, 3);
-          if (similar.length === 0) return null;
-          return (
-            <div className="mb-12 bg-white rounded-2xl p-6 md:p-8 shadow-sm border border-gray-100">
-              <h2 className="text-2xl font-bold text-gray-900 mb-2">Produtos Similares Disponíveis</h2>
-              <p className="text-gray-600 mb-6">Este produto está esgotado. Veja alternativas da mesma categoria:</p>
-              <div className="grid sm:grid-cols-3 gap-6">
-                {similar.map(p => (
-                  <button
-                    key={p.id}
-                    onClick={() => navigate(`/produto/${p.id}`)}
-                    className="text-left bg-gray-50 rounded-xl overflow-hidden hover:shadow-md transition-shadow border border-gray-100"
-                  >
-                    <div className="h-40 bg-cover bg-center" style={{ backgroundImage: `url(${p.image})` }} />
-                    <div className="p-4">
-                      <div className="text-sm text-emerald-600 font-semibold mb-1">{p.brand}</div>
-                      <p className="font-medium text-gray-900 mb-2">{p.name}</p>
-                      <p className="text-emerald-700 font-bold">{p.price}€</p>
-                    </div>
-                  </button>
-                ))}
+          {effectiveStock === 0 && (() => {
+            const similar = products
+              .filter(p => p.id !== product.id && p.category === product.category && getEffectiveStock(p.id, p.stock) > 0)
+              .slice(0, 3);
+            if (similar.length === 0) return null;
+            return (
+              <div className="mb-12 bg-white rounded-2xl p-6 md:p-8 shadow-sm border border-gray-100 mt-12">
+                <h2 className="text-2xl font-bold text-gray-900 mb-2">Produtos Similares Disponíveis</h2>
+                <p className="text-gray-600 mb-6">Este produto está esgotado. Veja alternativas da mesma categoria:</p>
+                <div className="grid sm:grid-cols-3 gap-6">
+                  {similar.map(p => (
+                    <button
+                      key={p.id}
+                      onClick={() => navigate(`/produto/${p.id}`)}
+                      className="text-left bg-gray-50 rounded-xl overflow-hidden hover:shadow-md transition-shadow border border-gray-100"
+                    >
+                      <div className="h-40 bg-cover bg-center" style={{ backgroundImage: `url(${p.image})` }} />
+                      <div className="p-4">
+                        <div className="text-sm text-emerald-600 font-semibold mb-1">{p.brand}</div>
+                        <p className="font-medium text-gray-900 mb-2">{p.name}</p>
+                        <p className="text-emerald-700 font-bold">{p.price}€</p>
+                      </div>
+                    </button>
+                  ))}
+                </div>
               </div>
-            </div>
-          );
-        })()}
+            );
+          })()}
 
         </div>
       </main>
